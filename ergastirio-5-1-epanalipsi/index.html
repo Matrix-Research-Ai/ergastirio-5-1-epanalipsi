@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Εργαστήριο 5ο 1 — Επανάληψη (Εργαστήρια 1ο–5ο) | Οδηγός Διδασκαλίας Ψυκτικών Αυτοματισμών (v1)</title>
+<meta name="description" content="Σχέδιο Μαθήματος — Εργαστήριο 5ο 1: επανάληψη στα Εργαστήρια 1ο–5ο πριν το γραπτό διαγώνισμα. Τρεις σταθμοί ανάκλησης, μίνι διαγώνισμα 12′ με κλειδί, δημόσιο πλάνο εξέτασης. Γ΄ Εσπερινού ΕΠΑΛ, 7 μαθητές, 2 × 40′ + 10′.">
+<meta name="theme-color" content="#0b4f8a">
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+    } catch (e) {}
+  })();
+</script>
+<style>
+:root {
+  --primary: #0d47a1; --primary-light: #1976d2; --secondary: #00acc1;
+  --accent: #ff9800; --danger: #d84315; --peda: #6a1b9a;
+  --ok: #2e7d32; --break: #e65100; --lcd: #6ef58a;
+  --bg: #f4f7f6; --surface: #ffffff; --surface-2: #f7fafc;
+  --text: #1f2933; --muted: #5b6771; --border: #dfe6e9;
+  --thead: #e3f2fd; --link: #1565c0;
+  --radius: 14px; --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(13, 71, 161, .07);
+  --shadow-lg: 0 8px 30px rgba(13, 71, 161, .12);
+  --maxw: 1220px;
+}
+html[data-theme="dark"] {
+  --primary: #8ab4ff; --primary-light: #a8ccff; --secondary: #4dd0e1;
+  --accent: #ffb74d; --danger: #ff8a65; --peda: #ce93d8; --ok: #81c784;
+  --break: #ffb74d;
+  --bg: #0e1621; --surface: #151f2b; --surface-2: #1a2534;
+  --text: #e8eef5; --muted: #9fb0c0; --border: #26374a;
+  --thead: #1c2c40; --link: #7fb2ff;
+  --shadow: 0 2px 14px rgba(0,0,0,.35);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 { line-height: 1.3; text-wrap: balance; }
+p { text-wrap: pretty; }
+a { color: var(--link); }
+img, svg { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--secondary); outline-offset: 2px; border-radius: 4px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 999;
+  background: var(--primary); color: #fff; padding: 12px 18px;
+  border-radius: 0 0 8px 0; font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { left: 0; }
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 60;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 6px rgba(0,0,0,.04);
+}
+.topbar__inner {
+  max-width: var(--maxw); margin: 0 auto;
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: .95rem; color: var(--primary);
+  text-decoration: none; margin-right: auto; min-width: 0;
+}
+.brand span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: inherit; font-size: .85rem; font-weight: 600;
+  color: var(--primary); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 7px 14px; cursor: pointer;
+  transition: background .18s, border-color .18s, transform .12s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--thead); border-color: var(--secondary); }
+.btn:active { transform: scale(.97); }
+.btn--ghost { background: transparent; }
+.btn--sm { font-size: .78rem; padding: 5px 10px; }
+.btn[aria-pressed="true"] { background: var(--thead); border-color: var(--secondary); }
+.progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; }
+.progress__bar {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--secondary), var(--primary-light));
+  transition: width .1s linear;
+}
+.timer {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 5px 12px; font-size: .85rem;
+  font-weight: 700; color: var(--primary);
+}
+.timer__label { color: var(--muted); font-weight: 600; font-size: .75rem; }
+.timer__value { min-width: 46px; text-align: right; }
+.timer.is-running { border-color: var(--secondary); background: var(--thead); }
+.timer.is-break { border-color: var(--break); background: color-mix(in srgb, var(--break) 15%, var(--surface)); }
+.timer.is-break .timer__value { color: var(--break); }
+
+.hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #0b3d91 0%, #1565c0 55%, #00acc1 140%);
+  color: #fff; padding: 54px 0 46px;
+  border-bottom: 5px solid var(--secondary);
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255,255,255,.16), transparent 42%),
+    radial-gradient(circle at 5% 95%, rgba(0,172,193,.35), transparent 45%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero__eyebrow {
+  display: inline-block; font-size: .78rem; letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 700;
+  color: #b3e5fc; margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+  margin: 0 0 14px; max-width: 38ch; font-weight: 700;
+}
+.hero__sub { font-size: clamp(.95rem, 2vw, 1.08rem); opacity: .93; margin: 0 0 22px; max-width: 64ch; }
+.hero__meta { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28);
+  padding: 6px 15px; border-radius: 999px;
+  font-size: .85rem; font-weight: 600; backdrop-filter: blur(4px);
+}
+
+.layout {
+  display: grid; grid-template-columns: 1fr;
+  gap: 32px; padding-top: 34px; padding-bottom: 60px;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .layout { grid-template-columns: 288px minmax(0, 1fr); gap: 40px; }
+}
+
+.sidebar { display: none; }
+@media (min-width: 1024px) {
+  .sidebar { display: block; position: sticky; top: 74px; }
+}
+.toc {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+}
+.toc h2 {
+  font-size: .78rem; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--muted); margin: 0 0 14px; font-weight: 700;
+}
+.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; }
+.toc a {
+  display: flex; gap: 10px; align-items: baseline;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  text-decoration: none; color: var(--text);
+  font-size: .87rem; font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.toc a::before {
+  content: counter(toc) "."; color: var(--secondary);
+  font-weight: 700; font-size: .78rem; flex: 0 0 auto;
+}
+.toc a:hover { background: var(--surface-2); color: var(--primary); }
+.toc a.is-active {
+  background: var(--thead); color: var(--primary);
+  border-left-color: var(--secondary); font-weight: 700;
+}
+.toc-mobile { margin: 0 0 26px; }
+@media (min-width: 1024px) { .toc-mobile { display: none; } }
+
+section { scroll-margin-top: 84px; margin-bottom: 34px; }
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: clamp(20px, 3vw, 34px);
+  box-shadow: var(--shadow);
+}
+.section-title {
+  display: flex; align-items: center; gap: 12px;
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  color: var(--primary); margin: 0 0 8px; font-weight: 700;
+}
+.section-title .num {
+  flex: 0 0 auto; display: grid; place-items: center;
+  width: 34px; height: 34px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff; font-size: .95rem; font-weight: 700;
+}
+.section-rule {
+  height: 3px; width: 90px; border-radius: 3px; margin: 0 0 22px;
+  background: linear-gradient(90deg, var(--secondary), transparent);
+}
+h3 { color: var(--primary-light); font-size: 1.08rem; margin: 26px 0 10px; font-weight: 700; }
+h3:first-of-type { margin-top: 14px; }
+h4 { font-size: .98rem; color: var(--primary); margin: 18px 0 8px; }
+.lead { font-size: 1.02rem; color: var(--text); }
+.muted { color: var(--muted); font-size: .92rem; }
+
+.table-wrap {
+  overflow-x: auto; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); margin-top: 14px;
+  -webkit-overflow-scrolling: touch;
+}
+table { width: 100%; border-collapse: collapse; font-size: .92rem; background: var(--surface); }
+caption { text-align: left; padding: 0 0 10px; color: var(--muted); font-size: .88rem; }
+th, td { padding: 11px 13px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+thead th {
+  background: var(--thead); color: var(--primary); font-weight: 700;
+  font-size: .84rem; text-transform: uppercase; letter-spacing: .04em;
+}
+tbody tr:nth-child(even) { background: var(--surface-2); }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--thead); }
+td:first-child { white-space: nowrap; }
+
+.badge-num {
+  display: inline-grid; place-items: center;
+  min-width: 30px; height: 26px; padding: 0 8px;
+  border-radius: 7px; background: var(--thead);
+  color: var(--primary); font-weight: 700; font-size: .82rem;
+  border: 1px solid var(--border);
+}
+.badge-time {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  background: var(--primary); color: #fff; font-weight: 700;
+  font-size: .78rem; white-space: nowrap;
+}
+.badge-k {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  font-size: .74rem; font-weight: 700; border: 1px solid var(--border);
+  background: var(--thead); color: var(--primary); white-space: nowrap;
+}
+.badge-block {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  background: var(--break); color: #fff; font-weight: 700;
+  font-size: .74rem; white-space: nowrap;
+}
+
+.list-check { list-style: none; margin: 12px 0 0; padding: 0; }
+.list-check li {
+  position: relative; padding: 7px 0 7px 30px;
+  border-bottom: 1px dashed var(--border);
+}
+.list-check li:last-child { border-bottom: 0; }
+.list-check li::before {
+  content: ""; position: absolute; left: 4px; top: 16px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--secondary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--secondary) 18%, transparent);
+}
+.list-check strong { color: var(--primary); }
+.list-plain { margin: 10px 0 0; padding-left: 20px; }
+.list-plain li { margin-bottom: 6px; }
+
+.callout {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 16px 18px; margin: 20px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-left: 5px solid var(--secondary);
+  background: color-mix(in srgb, var(--secondary) 10%, var(--surface));
+  font-size: .95rem;
+}
+.callout--warn {
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+.callout--danger {
+  border-left-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 11%, var(--surface));
+}
+.callout--ok {
+  border-left-color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 10%, var(--surface));
+}
+.callout--break {
+  border-left-color: var(--break);
+  background: color-mix(in srgb, var(--break) 10%, var(--surface));
+}
+.callout--info {
+  border-left-color: var(--primary-light);
+  background: color-mix(in srgb, var(--primary-light) 8%, var(--surface));
+}
+.callout__icon { flex: 0 0 auto; line-height: 1.5; }
+.callout p { margin: 0 0 8px; }
+.callout p:last-child { margin-bottom: 0; }
+
+.stats {
+  display: grid; gap: 14px; margin: 22px 0 6px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+.stat {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 16px 18px;
+  border-top: 3px solid var(--secondary);
+}
+.stat--break { border-top-color: var(--break); }
+.stat__value { font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1.1; }
+.stat--break .stat__value { color: var(--break); }
+.stat__label { font-size: .82rem; color: var(--muted); margin-top: 4px; font-weight: 600; }
+
+.glance {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: 18px 0 8px;
+}
+.glance__cell {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 6%, var(--surface)), var(--surface-2));
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.glance__cell h5 {
+  margin: 0 0 4px; font-size: .7rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); font-weight: 800;
+}
+.glance__cell p { margin: 0; font-size: .9rem; font-weight: 600; color: var(--primary); }
+
+.timeline { position: relative; margin: 22px 0 8px; padding-left: 28px; }
+.timeline::before {
+  content: ""; position: absolute; left: 9px; top: 8px; bottom: 8px;
+  width: 2px; border-radius: 2px;
+  background: linear-gradient(var(--secondary), var(--primary));
+}
+.timeline__item { position: relative; margin-bottom: 14px; }
+.timeline__item::before {
+  content: ""; position: absolute; left: -24px; top: 7px;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--surface); border: 3px solid var(--secondary);
+}
+.timeline__item--safety::before { border-color: var(--danger); }
+.timeline__item--break::before {
+  border-color: var(--break);
+  width: 17px; height: 17px; left: -26px; top: 5px;
+  background: color-mix(in srgb, var(--break) 25%, var(--surface));
+}
+.timeline__item--resume::before { border-color: var(--ok); }
+.timeline__time {
+  font-weight: 800; color: var(--primary); font-size: .86rem;
+  font-variant-numeric: tabular-nums;
+}
+.timeline__item--break .timeline__time { color: var(--break); }
+.timeline__text { font-size: .93rem; }
+.timeline__item--break .timeline__text {
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--break) 9%, var(--surface));
+  border-left: 4px solid var(--break);
+  margin-top: 4px;
+}
+.timeline__item--break .timeline__text strong { color: var(--break); }
+
+.phase {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); margin-bottom: 18px; overflow: hidden;
+  break-inside: avoid;
+}
+.phase--break {
+  border: 2px dashed var(--break);
+  background: color-mix(in srgb, var(--break) 5%, var(--surface));
+}
+.phase--resume { border-left: 5px solid var(--ok); }
+.phase__head {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 13px 18px; background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.phase--break .phase__head { background: color-mix(in srgb, var(--break) 12%, var(--surface)); }
+.phase__title { font-weight: 700; color: var(--primary); font-size: 1rem; margin-right: auto; }
+.phase--break .phase__title { color: var(--break); }
+.phase__body { padding: 4px 18px 18px; }
+.phase__body > p:first-child { margin-top: 12px; }
+.phase-grid {
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 14px;
+}
+.mini {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 14px; font-size: .9rem;
+}
+.mini h5 {
+  margin: 0 0 6px; font-size: .74rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); font-weight: 800;
+}
+.mini p { margin: 0; }
+
+.why {
+  border-left: 5px solid var(--peda);
+  background: color-mix(in srgb, var(--peda) 9%, var(--surface));
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 18px; margin-top: 16px; font-size: .92rem;
+}
+.why h4 {
+  margin: 0 0 8px; font-size: .74rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--peda); font-weight: 800;
+}
+.why p { margin: 0 0 8px; }
+.why p:last-child { margin-bottom: 0; }
+.why ul { margin: 8px 0 0; padding-left: 20px; }
+.why li { margin-bottom: 6px; }
+
+.script {
+  border-left: 5px solid var(--secondary);
+  background: color-mix(in srgb, var(--secondary) 8%, var(--surface));
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 18px; margin-top: 16px; font-size: .92rem;
+}
+.script h4 {
+  margin: 0 0 8px; font-size: .72rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--secondary); font-weight: 800;
+}
+.script blockquote {
+  margin: 8px 0; padding: 10px 14px;
+  background: var(--surface); border-left: 3px solid var(--secondary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic; color: var(--text);
+}
+.script blockquote::before { content: "«"; font-weight: 800; color: var(--secondary); margin-right: 2px; }
+.script blockquote::after { content: "»"; font-weight: 800; color: var(--secondary); margin-left: 2px; }
+
+.udl {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: color-mix(in srgb, var(--ok) 15%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--ok) 40%, var(--border));
+  border-radius: 999px; padding: 3px 12px; margin: 6px 6px 0 0;
+  font-size: .78rem; font-weight: 700; color: var(--ok);
+}
+
+.ican {
+  background: var(--thead); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 18px; margin: 14px 0;
+}
+.ican h4 { margin: 0 0 8px; color: var(--primary); font-size: .9rem; }
+.ican ul { margin: 0; padding-left: 20px; font-size: .92rem; }
+.ican li { margin-bottom: 4px; }
+
+a.cite {
+  font-size: .72rem; font-weight: 800; text-decoration: none;
+  color: var(--peda); padding: 0 2px; white-space: nowrap;
+}
+a.cite:hover { text-decoration: underline; }
+
+.stations {
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  margin: 16px 0 6px;
+}
+.station {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface-2); padding: 14px 16px; font-size: .9rem;
+  border-top: 4px solid var(--secondary);
+}
+.station h5 {
+  margin: 0 0 8px; font-size: .92rem; color: var(--primary);
+  font-weight: 800; display: flex; align-items: center; gap: 8px;
+}
+.station h5 .snum {
+  display: inline-grid; place-items: center;
+  width: 24px; height: 24px; border-radius: 7px;
+  background: var(--primary); color: #fff; font-size: .76rem; font-weight: 800;
+}
+.station ul { margin: 6px 0 0; padding-left: 18px; }
+.station li { margin-bottom: 4px; }
+.station .role {
+  display: inline-block; margin-top: 8px; font-size: .74rem;
+  font-weight: 700; color: var(--muted);
+  border-top: 1px dashed var(--border); padding-top: 8px; width: 100%;
+}
+
+.poe {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin: 16px 0;
+}
+.poe__col {
+  border: 1px dashed var(--border); border-radius: var(--radius-sm);
+  padding: 12px 14px; background: var(--surface-2); font-size: .9rem;
+}
+.poe__col h5 {
+  margin: 0 0 8px; font-size: .72rem; letter-spacing: .1em;
+  text-transform: uppercase; font-weight: 800;
+}
+.poe__col--p h5 { color: var(--accent); }
+.poe__col--o h5 { color: var(--secondary); }
+.poe__col--e h5 { color: var(--peda); }
+.poe__col .line { height: 22px; }
+
+.sheet {
+  border: 2px dashed var(--border); border-radius: var(--radius-sm);
+  padding: 20px 22px; margin: 18px 0; background: var(--surface-2);
+  position: relative;
+}
+.sheet__head {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 14px;
+}
+.sheet__head h4 { margin: 0; font-size: 1rem; color: var(--primary); }
+.sheet__head span { font-size: .8rem; color: var(--muted); font-weight: 700; }
+.sheet__actions {
+  position: absolute; top: 14px; right: 14px;
+  display: flex; gap: 6px;
+}
+@media print { .sheet__actions { display: none !important; } }
+
+.q { margin: 0 0 14px; }
+.q__stem { font-weight: 600; margin-bottom: 6px; font-size: .93rem; }
+
+.confidence { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.confidence span {
+  display: inline-grid; place-items: center;
+  min-width: 34px; height: 30px; padding: 0 8px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-weight: 700; font-size: .82rem; color: var(--muted);
+}
+
+.answer-key { margin-top: 10px; font-size: .9rem; }
+.answer-key summary {
+  cursor: pointer; font-weight: 700; color: var(--primary);
+  padding: 8px 12px; background: var(--thead); border-radius: var(--radius-sm);
+}
+.answer-key[open] summary { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.answer-key__body {
+  border: 1px solid var(--border); border-top: 0; padding: 12px 14px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm); background: var(--surface);
+}
+.lines { margin-top: 8px; }
+.line { border-bottom: 1px solid var(--border); height: 26px; margin-bottom: 8px; }
+
+.meta-row {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  font-size: .85rem; color: var(--muted);
+  padding: 10px 0 4px; border-bottom: 1px dashed var(--border); margin-bottom: 14px;
+}
+.meta-row span { display: inline-flex; align-items: center; gap: 6px; }
+.meta-row .line { display: inline-block; min-width: 120px; height: 1.1em; margin: 0; }
+
+.safety-card {
+  border: 4px solid var(--danger); border-radius: var(--radius);
+  padding: 20px 22px; margin: 18px 0;
+  background: color-mix(in srgb, var(--danger) 8%, var(--surface));
+  position: relative;
+}
+.safety-card h4 {
+  margin: 0 0 12px; color: var(--danger); font-size: 1.05rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.safety-card ol { margin: 0; padding-left: 26px; }
+.safety-card li { margin-bottom: 8px; font-size: .93rem; }
+.safety-card .footer {
+  margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--danger);
+  font-size: .82rem; color: var(--muted); font-style: italic;
+}
+
+.sim {
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(16px, 2.5vw, 24px);
+  margin: 22px 0;
+  box-shadow: var(--shadow);
+}
+.sim__head {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--secondary);
+}
+.sim__title {
+  font-size: 1.08rem; color: var(--primary);
+  font-weight: 800; margin: 0;
+}
+.sim__badge {
+  font-size: .68rem; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; padding: 3px 10px;
+  border-radius: 999px; background: var(--secondary); color: #fff;
+  white-space: nowrap;
+}
+.sim__badge--teacher { background: var(--peda); }
+.sim__hint {
+  font-size: .86rem; color: var(--muted);
+  margin: 0 0 18px; line-height: 1.55;
+}
+.sim__grid {
+  display: grid; gap: 20px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) {
+  .sim__grid { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); }
+}
+
+/* Pressure gauge */
+.gauge-wrap {
+  background: linear-gradient(165deg, #2b2b2b 0%, #151515 100%);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow:
+    inset 0 -6px 0 rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 6px 18px rgba(0,0,0,.3);
+  color: #f0f0f0;
+}
+.gauge-wrap__brand {
+  font-size: .68rem; font-weight: 800; letter-spacing: .2em;
+  text-transform: uppercase; color: #f5b301;
+  margin-bottom: 10px; opacity: .9;
+}
+.gauge-wrap svg {
+  width: 100%; max-width: 300px;
+  height: auto; display: block; margin: 0 auto;
+  background: #071f14;
+  border: 3px solid #0a0a0a;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 30px rgba(110,245,138,.12),
+    0 0 20px rgba(0,0,0,.6);
+  padding: 8px;
+}
+.gauge-wrap__readout {
+  color: var(--lcd);
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 1.8rem; font-weight: 700;
+  text-align: center; line-height: 1.1;
+  text-shadow: 0 0 10px rgba(110,245,138,.55);
+  font-variant-numeric: tabular-nums;
+  margin-top: 12px;
+}
+.gauge-wrap__readout small { font-size: .8rem; opacity: .8; }
+
+/* Switch state indicator */
+.ps-indicator {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  border-top: 4px solid var(--secondary);
+  margin-bottom: 12px;
+}
+.ps-indicator h5 {
+  margin: 0 0 8px; font-size: .78rem; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--primary);
+}
+.ps-indicator__state {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 1.05rem; font-weight: 800;
+}
+.ps-indicator__led {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #2a2a2a; border: 2px solid #444;
+  transition: all .2s;
+  flex: 0 0 auto;
+}
+.ps-indicator.is-closed { border-top-color: var(--ok); }
+.ps-indicator.is-closed .ps-indicator__led {
+  background: radial-gradient(circle, #a5d6a7 0%, #4caf50 60%, #1b5e20 100%);
+  border-color: #4caf50;
+  box-shadow: 0 0 14px rgba(76,175,80,.8);
+}
+.ps-indicator.is-closed .ps-indicator__state { color: var(--ok); }
+.ps-indicator.is-open { border-top-color: var(--danger); }
+.ps-indicator.is-open .ps-indicator__led {
+  background: radial-gradient(circle, #ffab91 0%, #d84315 60%, #7f1d00 100%);
+  border-color: #d84315;
+  box-shadow: 0 0 14px rgba(216,67,21,.8);
+}
+.ps-indicator.is-open .ps-indicator__state { color: var(--danger); }
+.ps-indicator__note {
+  font-size: .82rem; color: var(--muted);
+  margin-top: 6px; font-weight: 600;
+}
+
+.slider {
+  width: 100%; margin: 8px 0 4px;
+  -webkit-appearance: none; appearance: none;
+  height: 8px; border-radius: 999px;
+  background: linear-gradient(90deg, #2196f3, var(--secondary), var(--accent), var(--danger));
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+.slider::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+.slider__labels {
+  display: flex; justify-content: space-between;
+  font-size: .72rem; color: var(--muted); font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.feedback {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--secondary);
+  background: color-mix(in srgb, var(--secondary) 8%, var(--surface));
+  font-size: .9rem;
+  min-height: 46px;
+  display: flex; align-items: center; gap: 10px;
+}
+.feedback__icon { font-size: 1.2rem; flex: 0 0 auto; }
+.feedback__text { margin: 0; }
+.feedback.is-ok { border-left-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, var(--surface)); }
+.feedback.is-warn { border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 11%, var(--surface)); }
+.feedback.is-danger { border-left-color: var(--danger); background: color-mix(in srgb, var(--danger) 11%, var(--surface)); }
+
+.safe-list { list-style: none; margin: 0; padding: 0; }
+.safe-list li { border-bottom: 1px dashed var(--border); }
+.safe-list li:last-child { border-bottom: 0; }
+.safe-check {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 12px 4px; cursor: pointer; font-size: .95rem;
+}
+.safe-check input {
+  appearance: none; -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: 24px; height: 24px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer; margin-top: 2px;
+  position: relative; background: var(--surface);
+  transition: all .15s;
+}
+.safe-check input:checked { background: var(--ok); border-color: var(--ok); }
+.safe-check input:checked::after {
+  content: "✓";
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  color: #fff; font-weight: 800; font-size: .95rem;
+}
+.safe-check input:focus-visible { outline: 3px solid var(--secondary); outline-offset: 2px; }
+.safe-check__text { flex: 1; line-height: 1.5; }
+.safe-check__text strong { color: var(--primary); }
+.safe-progress {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-size: .88rem; font-weight: 700; color: var(--muted);
+}
+.safe-progress__bar {
+  flex: 1;
+  height: 10px; border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.safe-progress__fill {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--accent), var(--ok));
+  transition: width .3s ease;
+}
+.safe-progress.is-complete .safe-progress__fill {
+  background: linear-gradient(90deg, var(--ok), var(--secondary));
+}
+
+/* Cycle diagram (for sim 3) */
+.cycle-svg {
+  width: 100%; max-width: 460px;
+  display: block; margin: 0 auto;
+}
+
+.toolbar {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  margin: 22px 0 8px; padding: 14px 16px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.search { position: relative; flex: 1 1 240px; display: flex; align-items: center; }
+.search svg { position: absolute; left: 12px; color: var(--muted); pointer-events: none; }
+.search input {
+  width: 100%; font: inherit; font-size: .92rem;
+  padding: 10px 12px 10px 38px;
+  border: 1px solid var(--border); border-radius: 999px;
+  background: var(--surface); color: var(--text);
+}
+.search input:focus { border-color: var(--secondary); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--secondary) 25%, transparent); }
+.result-count { font-size: .85rem; color: var(--muted); font-weight: 600; }
+.empty-state {
+  padding: 22px; text-align: center; color: var(--muted);
+  border: 1px dashed var(--border); border-radius: var(--radius-sm); margin-top: 10px;
+}
+
+.refs { list-style: none; counter-reset: ref; margin: 0; padding: 0; }
+.refs li {
+  counter-increment: ref; position: relative;
+  padding: 16px 18px 16px 62px; margin-bottom: 12px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font-size: .9rem;
+  transition: border-color .15s;
+}
+.refs li:hover { border-color: var(--secondary); }
+.refs li::before {
+  content: "P" counter(ref);
+  position: absolute; left: 14px; top: 16px;
+  min-width: 34px; height: 26px; padding: 0 6px; border-radius: 7px;
+  display: grid; place-items: center;
+  background: var(--peda); color: #fff;
+  font-weight: 800; font-size: .74rem;
+}
+.refs li:target { border-color: var(--secondary); box-shadow: var(--shadow-lg); }
+.refs a { word-break: break-word; font-weight: 600; }
+.refs .ref-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 8px; font-size: .84rem;
+  text-decoration: none; color: var(--link);
+  border-bottom: 1px dotted currentColor;
+}
+.refs .ref-link:hover { color: var(--secondary); }
+
+.refs--tech { counter-reset: tech; }
+.refs--tech li::before {
+  content: "T" counter(tech);
+  background: var(--primary);
+}
+
+.reflect-grid {
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 14px;
+}
+.reflect-card {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+}
+.reflect-card h5 {
+  margin: 0 0 6px; font-size: .78rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--primary); font-weight: 800;
+}
+.reflect-card .line { height: 24px; }
+
+footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 34px 20px; text-align: center;
+  color: var(--muted); font-size: .88rem;
+}
+footer p { margin: 4px 0; }
+.to-top {
+  position: fixed; right: 22px; bottom: 22px; z-index: 70;
+  width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  background: var(--primary); color: #fff; border: none;
+  box-shadow: var(--shadow-lg);
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity .25s, transform .25s, visibility .25s, background .2s;
+}
+.to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.to-top:hover { background: var(--secondary); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+@media print {
+  @page { margin: 14mm; }
+  html { scroll-behavior: auto; }
+  body { background: #fff; color: #000; font-size: 10.5pt; line-height: 1.45; }
+  .topbar, .sidebar, .toc-mobile, .to-top, .toolbar, .no-print { display: none !important; }
+  .hero {
+    background: #fff !important; color: #000 !important;
+    border-bottom: 3px solid #000; padding: 0 0 12px;
+  }
+  .hero::after { display: none; }
+  .hero h1 { color: #000; }
+  .hero__eyebrow { color: #333; }
+  .chip { background: #f0f0f0 !important; border-color: #999 !important; color: #000 !important; }
+  .layout { display: block; padding: 0; }
+  .card { box-shadow: none; border: 1px solid #bbb; padding: 12px; }
+  section { margin-bottom: 14px; }
+  .phase, .sheet, .safety-card, .station { break-inside: avoid; }
+  .phase__head { background: #eee !important; }
+  .phase--break { border: 2px dashed #c00 !important; background: #fff8f0 !important; }
+  thead th { background: #e8e8e8 !important; color: #000 !important; }
+  tbody tr:nth-child(even) { background: #fafafa !important; }
+  .why { background: #f6f0fa !important; border-left-color: #6a1b9a !important; }
+  .script { background: #e0f7fa !important; border-left-color: #00838f !important; }
+  .callout { background: #f5f5f5 !important; }
+  .callout--break { background: #fff3e0 !important; }
+  a { color: #000; text-decoration: underline; }
+  .refs li::before { background: #444; }
+  .badge-time, .badge-num, .badge-block { background: #ddd !important; color: #000 !important; border: 1px solid #999; }
+  .sheet { border-style: solid; }
+  details.answer-key[open] .answer-key__body { display: block; }
+  .gauge-wrap, .gauge-wrap svg { background: #f5f5f5 !important; box-shadow: none !important; }
+  .gauge-wrap__readout { color: #000 !important; text-shadow: none !important; }
+}
+</style>
+<style>/* ——— Πρόσθετο φύλλο στυλ για τους δύο οδηγούς του Εργαστηρίου 5ου (v1) ——— */
+
+.stat p { margin: 0; }
+.stat { padding: 14px 16px; }
+.glance { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.glance__cell p { font-weight: 600; font-size: .88rem; }
+
+.station ol { margin: 8px 0 0; padding-left: 20px; }
+.station ol > li { margin-bottom: 8px; }
+.station details { margin-top: 10px; }
+
+.refs--tech { counter-reset: tech; }
+
+.paper {
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 24px 26px;
+  background: var(--surface);
+  margin: 18px 0;
+}
+.paper__head {
+  display: flex; flex-wrap: wrap; gap: 6px 18px;
+  align-items: baseline; justify-content: space-between;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 10px; margin-bottom: 14px;
+}
+.paper__school { font-size: .78rem; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.paper__title { font-size: 1rem; font-weight: 800; color: var(--primary); margin: 2px 0 0; }
+.paper__meta { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.paper h3 { font-size: .95rem; margin: 18px 0 8px; color: var(--primary); }
+.paper .item { margin: 0 0 10px; font-size: .93rem; }
+.paper .item__no { display: inline-block; min-width: 32px; font-weight: 800; color: var(--primary); }
+.paper .opts { margin: 3px 0 0; padding-left: 34px; font-size: .92rem; line-height: 1.85; }
+.paper .blank { display: inline-block; min-width: 64px; border-bottom: 1.5px solid currentColor; }
+.paper .write-lines .line { height: 26px; }
+.paper table { font-size: .86rem; }
+
+.key-item { border-left: 4px solid var(--ok); padding: 4px 0 4px 14px; margin: 12px 0; }
+.key-item--no { border-left-color: var(--danger); }
+
+.badge-exam {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  background: var(--danger); color: #fff; font-weight: 700; font-size: .74rem; white-space: nowrap;
+}
+.badge-review {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  background: var(--secondary); color: #fff; font-weight: 700; font-size: .74rem; white-space: nowrap;
+}
+
+@media print {
+  .table-wrap { overflow: visible !important; border: 0 !important; }
+  .table-wrap table { font-size: .8rem; }
+  .station details, .sheet details { break-inside: avoid; }
+  .paper { border-width: 1.5px; }
+  body.print-exam .topbar,
+  body.print-exam header.hero,
+  body.print-exam .sidebar,
+  body.print-exam .toc-mobile,
+  body.print-exam footer,
+  body.print-exam .to-top { display: none !important; }
+  body.print-exam .layout { display: block; padding: 0; }
+  body.print-exam main > *:not(#paper) { display: none !important; }
+  body.print-exam #paper .section-title,
+  body.print-exam #paper .section-rule,
+  body.print-exam #paper > .card > .callout,
+  body.print-exam #paper > .card > p.muted { display: none !important; }
+  body.print-exam #paper .card { border: 0; padding: 0; box-shadow: none; }
+  body.print-exam .paper { border: 0; padding: 0; margin: 0; }
+  body.print-exam .paper { font-size: .9rem; }
+  body.print-exam .paper .item { margin-bottom: 7px; }
+  body.print-exam .paper h3 { margin: 14px 0 6px; break-after: avoid; page-break-after: avoid; }
+  body.print-exam .paper .item,
+  body.print-exam .paper .table-wrap,
+  body.print-exam .paper table { break-inside: avoid; page-break-inside: avoid; }
+  body.print-exam .paper table { font-size: .78rem; }
+  body.print-exam .paper table th,
+  body.print-exam .paper table td { padding: 5px 7px; }
+  body.print-exam .paper h3 + .muted { break-after: avoid; page-break-after: avoid; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Μετάβαση στο κύριο περιεχόμενο</a>
+
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="#top">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 2v20M4.9 6.5l14.2 11M19.1 6.5L4.9 17.5"/>
+      </svg>
+      <span>Εργαστήριο 5ο 1 — Επανάληψη (1ο–5ο)</span>
+    </a>
+
+    <div class="timer no-print" id="timerBox" role="group" aria-label="Χρονόμετρο μαθήματος">
+      <span class="timer__label">Χρονόμετρο</span>
+      <span class="timer__value" id="timerValue" aria-live="polite">00:00</span>
+      <button class="btn btn--sm btn--ghost" id="timerToggle" type="button" aria-label="Έναρξη ή παύση χρονομέτρου">▶</button>
+      <button class="btn btn--sm btn--ghost" id="timerBreak" type="button" aria-label="Εναλλαγή λειτουργίας διαλείμματος">☕</button>
+      <button class="btn btn--sm btn--ghost" id="timerReset" type="button" aria-label="Μηδενισμός χρονομέτρου">↺</button>
+    </div>
+
+    <button class="btn btn--ghost no-print" type="button" id="printBtn" aria-label="Εκτύπωση του σχεδίου μαθήματος">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Εκτύπωση
+    </button>
+
+    <button class="btn btn--ghost no-print" type="button" id="themeToggle" aria-pressed="false" aria-label="Εναλλαγή σκούρου / φωτεινού θέματος">
+      <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+      </svg>
+      <span id="themeLabel">Σκούρο</span>
+    </button>
+  </div>
+  <div class="progress" aria-hidden="true"><span class="progress__bar" id="progressBar"></span></div>
+</div>
+
+<header class="hero" id="top">
+  <div class="container">
+    <span class="hero__eyebrow">Σχέδιο Μαθήματος · Εργαστήριο 5ο 1 · v1</span>
+    <h1>Επανάληψη στα Εργαστήρια 1ο–5ο — πριν το διαγώνισμα</h1>
+    <p class="hero__sub">
+      Σύστημα Ελέγχου, Ρύθμισης και Αυτοματισμού Εγκαταστάσεων Ψύξης και Κλιματισμού ·
+      Γ΄ Τάξη Εσπερινού ΕΠΑΛ · Τομέας Μηχανολογίας · ΦΕΚ 2.1–2.4 &amp; 3.1 · Εργαστηριακός Οδηγός 0-24-0064
+    </p>
+    <div class="hero__meta">
+      <span class="chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        2 × 40′ + 10′ διάλειμμα
+      </span>
+      <span class="chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        3 σταθμοί × 8′
+      </span>
+      <span class="chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+        Ανάκληση, όχι επαναδιδασκαλία
+      </span>
+      <span class="chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        7 μαθητές
+      </span>
+    </div>
+  </div>
+</header>
+
+<div class="container layout">
+
+  <aside class="sidebar" aria-label="Πλοήγηση περιεχομένου">
+    <nav class="toc" id="toc">
+      <h2>Περιεχόμενα</h2>
+      <ol>
+        <li><a href="#ident">Ταυτότητα</a></li>
+        <li><a href="#outcomes">Μαθησιακά Αποτελέσματα</a></li>
+        <li><a href="#profile">Προφίλ Εκπαιδευομένων</a></li>
+        <li><a href="#flow">Χρονοδιάγραμμα</a></li>
+        <li><a href="#break">Το Διάλειμμα</a></li>
+        <li><a href="#phases">Οι Φάσεις</a></li>
+        <li><a href="#map">Χάρτης Επανάληψης</a></li>
+        <li><a href="#stations">Τρεις Σταθμοί</a></li>
+        <li><a href="#minipaper">Μίνι Διαγώνισμα</a></li>
+        <li><a href="#blueprint">Τι θα πέσει</a></li>
+        <li><a href="#bank">Τράπεζα Θεμάτων</a></li>
+        <li><a href="#rubric">Ρούμπρικα</a></li>
+        <li><a href="#diff">Διαφοροποίηση &amp; UDL</a></li>
+        <li><a href="#materials">Υλικά</a></li>
+        <li><a href="#refs">Αναφορές</a></li>
+        <li><a href="#reflect">Αναστοχασμός</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main id="main">
+
+    <nav class="toc toc-mobile" aria-label="Πίνακας περιεχομένων (κινητό)">
+      <h2>Περιεχόμενα</h2>
+      <ol>
+        <li><a href="#ident">Ταυτότητα</a></li>
+        <li><a href="#outcomes">Μαθησιακά Αποτελέσματα</a></li>
+        <li><a href="#profile">Προφίλ Εκπαιδευομένων</a></li>
+        <li><a href="#flow">Χρονοδιάγραμμα</a></li>
+        <li><a href="#break">Το Διάλειμμα</a></li>
+        <li><a href="#phases">Οι Φάσεις</a></li>
+        <li><a href="#map">Χάρτης Επανάληψης</a></li>
+        <li><a href="#stations">Τρεις Σταθμοί</a></li>
+        <li><a href="#minipaper">Μίνι Διαγώνισμα</a></li>
+        <li><a href="#blueprint">Τι θα πέσει</a></li>
+        <li><a href="#bank">Τράπεζα Θεμάτων</a></li>
+        <li><a href="#rubric">Ρούμπρικα</a></li>
+        <li><a href="#diff">Διαφοροποίηση &amp; UDL</a></li>
+        <li><a href="#materials">Υλικά</a></li>
+        <li><a href="#refs">Αναφορές</a></li>
+        <li><a href="#reflect">Αναστοχασμός</a></li>
+      </ol>
+    </nav>
+
+    <div class="callout callout--info">
+      <span class="callout__icon" aria-hidden="true">🧭</span>
+      <div>
+        <p><strong>Τι είναι αυτό το δίωρο — και τι δεν είναι.</strong> Είναι η <em>ανάκληση</em> των Εργαστηρίων 1ο–5ο
+        (αισθητήρια, θερμοστάτες, LP, HP, έλεγχος περιέλιξης) με σταθμούς, μίνι διαγώνισμα και δημόσιο πλάνο
+        εξέτασης. Δεν διδάσκει νέα ύλη, δεν βαθμολογείται και δεν λύνει «όλες τις ασκήσεις στον πίνακα» — αυτό
+        θα το κάνει ο μαθητής μόνος του, στο τετράδιό του, με τις κάρτες των σταθμών.</p>
+        <p class="muted">Το επόμενο δίωρο (<strong>Εργαστήριο 5ο 2 — Διαγώνισμα</strong>) είναι γραπτό 90′. Ο παρών
+        οδηγός <em>δεν</em> περιέχει τα θέματα του γραπτού· περιέχει το πλάνο του και το μίνι διαγώνισμα με άλλα νούμερα.</p>
+      </div>
+    </div>
+
+    <!-- ===== 1. ΤΑΥΤΟΤΗΤΑ ===== -->
+    <section id="ident" aria-labelledby="ident-title">
+      <div class="card">
+        <h2 class="section-title" id="ident-title"><span class="num">1</span> Ταυτότητα του Διώρου Επανάληψης</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Το δίωρο αυτό κλείνει την πρώτη ενότητα του εργαστηρίου — <strong>ΦΕΚ 2.1–2.4 και 3.1</strong> — και
+          προετοιμάζει το γραπτό διαγώνισμα του επόμενου μαθήματος. Δεν προσθέτει ύλη: ζητά από κάθε μαθητή να
+          <em>βγάλει από το μυαλό του</em> αυτό που έμαθε με τα χέρια του, χωρίς σημειώσεις, και να το γράψει με
+          μονάδες, όρια και αιτιολόγηση — δηλαδή με τον τρόπο που θα του ζητηθεί την επόμενη εβδομάδα.
+        </p>
+
+        <div class="glance">
+          <div class="glance__cell"><h5>Θέση στο πρόγραμμα</h5><p>Μετά το 5ο εργαστήριο, πριν το 6ο (Ρελέ με βολτόμετρο)</p></div>
+          <div class="glance__cell"><h5>Διάρκεια</h5><p>40′ + 10′ διάλειμμα + 40′ = 90′ ρολόι</p></div>
+          <div class="glance__cell"><h5>Ύλη</h5><p>Εργαστήρια 1ο–5ο: αισθητήρια · θερμοστάτες · LP · HP · περιέλιξη</p></div>
+          <div class="glance__cell"><h5>Μορφή</h5><p>Ανάκληση σε 3 σταθμούς, μίνι διαγώνισμα 12′, διόρθωση από ομότιμους</p></div>
+          <div class="glance__cell"><h5>Τμήμα</h5><p>7 μαθητές · 3 ομάδες (2-2-3) · ρόλοι που εναλλάσσονται</p></div>
+          <div class="glance__cell"><h5>Βαθμός</h5><p>Κανένας — το μίνι διαγώνισμα δεν βαθμολογείται</p></div>
+        </div>
+
+        <div class="callout callout--ok">
+          <span class="callout__icon" aria-hidden="true">✅</span>
+          <div>
+            <p><strong>Δεν χρειάζεται πάγκος, όργανα, τάση ή ψυκτικό μέσο.</strong> Το δίωρο εκτελείται σε αίθουσα
+            διδασκαλίας με πίνακα και επτά καρέκλες. Οι μετρήσεις που θα συζητηθούν είναι <em>δοσμένες</em> στις
+            κάρτες των σταθμών — γι' αυτό δεν υπάρχει ρίσκο, δεν υπάρχει χρόνος στησίματος και δεν χάνεται το
+            πρώτο δεκάλεπτο σε «πού είναι το πολύμετρο».</p>
+            <p class="muted">Αν θέλεις οπωσδήποτε αφή, υπάρχει μία μόνο προσθήκη στο Σχέδιο Β (§14): ένα καλό μοτέρ
+            και ένα πολύμετρο στον Σταθμό Γ, και οι τιμές της κάρτας επιβεβαιώνονται αντί να διαβαστούν.</p>
+          </div>
+        </div>
+
+        <h3>Οι πέντε περιοχές της ύλης — και τι «ξέρω» σημαίνει σε κάθε μία</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Οι πέντε περιοχές της ύλης με το κρίσιμο σημείο κάθε περιοχής</caption>
+            <thead>
+              <tr><th scope="col">#</th><th scope="col">Περιοχή (εργαστήριο)</th><th scope="col">Το κρίσιμο σημείο — αυτό που κρίνει τον βαθμό</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Αισθητήρια θερμοκρασίας (1ο)</td><td>NTC <em>πέφτει</em> με τη ζέστη, PTC <em>ανεβαίνει</em>· θερμοστοιχείο = mV, θερμίστορ = Ω, διμεταλλικό = διακόπτης</td></tr>
+              <tr><td>2</td><td>Θερμοστάτες (2ο)</td><td>setpoint, υστέρηση, <strong>START = STOP + DIFF</strong>· χειροκίνητο reset στη διάταξη ασφαλείας</td></tr>
+              <tr><td>3</td><td>Πρεσοστάτης LP (3ο)</td><td>cut-out <em>κάτω</em>, cut-in <em>πάνω</em>· η ζώνη υστέρησης κρατά την κατάσταση· αυτόματο reset</td></tr>
+              <tr><td>4</td><td>Πρεσοστάτης HP (4ο)</td><td>cut-out <em>πάνω</em>, cut-in <em>κάτω</em>· <strong>χειροκίνητο reset</strong> — δεν ξανακλείνει μόνος του</td></tr>
+              <tr><td>5</td><td>Έλεγχος περιέλιξης κινητήρα (5ο)</td><td><strong>R(C-S) + R(C-R) = R(S-R)</strong>· μόνωση &lt; 1 MΩ = ύποπτο· μεγάμετρο 500 V</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--danger">
+          <span class="callout__icon" aria-hidden="true">⚠</span>
+          <div>
+            <p><strong>Τι δεν κάνουμε σε αυτό το δίωρο — γραμμένο για να μη χαθεί χρόνος:</strong></p>
+            <p>· <strong>Δεν ξαναδιδάσκουμε</strong> καμία από τις πέντε περιοχές. Αν χρειαστεί υπενθύμιση, είναι
+            <em>μία</em> πρόταση και μετά η ερώτηση επιστρέφει στον μαθητή.</p>
+            <p>· <strong>Δεν λύνουμε όλα τα θέματα στον πίνακα.</strong> Ο πίνακας κρατά μόνο τα τρία λάθη που
+            εμφανίστηκαν στην τάξη και τους κανόνες που τα διορθώνουν.</p>
+            <p>· <strong>Δεν ανακοινώνονται τα νούμερα του γραπτού.</strong> Ανακοινώνονται η δομή, τα βάρη, τα
+            λεπτά και οι κανόνες μοριοδότησης — ποτέ τα δεδομένα των ασκήσεων.</p>
+          </div>
+        </div>
+
+        <div class="why">
+          <h4>Γιατί έτσι — η λογική του διώρου</h4>
+          <p><strong>Η ανάκληση παράγει μάθηση, η ανάγνωση όχι.</strong> Δύο δεκαετίες ερευνών δείχνουν ότι η
+          <em>προσπάθεια</em> να θυμηθείς (retrieval practice) σταθεροποιεί τη γνώση περισσότερο από την
+          επανάληψη της ανάγνωσης — το λεγόμενο testing effect <a class="cite" href="#ref-roediger">[Roediger &amp; Karpicke, 2006]</a>.
+          Γι' αυτό το δίωρο είναι στημένο γύρω από ερωτήσεις και κάρτες, όχι γύρω από σύνοψη στον πίνακα.</p>
+          <p><strong>Η ανάμειξη διαφορετικών περιοχών βοηθά.</strong> Τα τρία θέματα μπλέκονται σκόπιμα
+          (interleaving) αντί να γίνουν ένα μπλοκ αισθητήρων και ένα μπλοκ κινητήρα: ο μαθητής πρέπει να
+          <em>διαλέξει</em> ποια γνώση ταιριάζει — ακριβώς όπως στο γραπτό, όπου κανείς δεν του λέει «αυτό είναι
+          θέμα θερμοστάτη» <a class="cite" href="#ref-rohrer">[Rohrer &amp; Taylor, 2007]</a>.</p>
+          <p><strong>Το λάθος δεν τιμωρείται, καταγράφεται.</strong> Σε τμήμα ενηλίκων το κόστος της δημόσιας
+          έκθεσης είναι μεγαλύτερο από το όφελος της διόρθωσης· γι' αυτό η διόρθωση γίνεται γραπτά και από
+          ομότιμους, και ο πίνακας δέχεται λάθη <em>ανώνυμα</em> <a class="cite" href="#ref-edmondson">[Edmondson, 1999]</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. ΜΑΘΗΣΙΑΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ===== -->
+    <section id="outcomes" aria-labelledby="outcomes-title">
+      <div class="card">
+        <h2 class="section-title" id="outcomes-title"><span class="num">2</span> Μαθησιακά Αποτελέσματα</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Διατυπώνονται ως Γνώσεις–Δεξιότητες–Στάσεις (KSA) και είναι <strong>παρατηρήσιμα μέσα στο δίωρο</strong>:
+          κάθε αποτέλεσμα έχει ένα τεκμήριο που μένει στο τετράδιο ή στον πίνακα. Δεν υπάρχει αποτέλεσμα που να
+          απαιτεί βαθμολόγηση.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Μαθησιακά αποτελέσματα ανά κατηγορία με τεκμήριο</caption>
+            <thead>
+              <tr><th scope="col">Κατηγορία</th><th scope="col">Αποτέλεσμα</th><th scope="col">Τεκμήριο</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Γνώσεις</td><td>Ονομάζει τα τρία αισθητήρια θερμοκρασίας και τη μονάδα μέτρησης καθενός (Ω, mV, συνέχεια).</td><td>Κάρτα Σταθμού Α, ερώτηση 2</td></tr>
+              <tr><td>Γνώσεις</td><td>Εξηγεί τη διαφορά NTC–PTC και προβλέπει την κατεύθυνση της αντίστασης όταν ανεβαίνει η θερμοκρασία.</td><td>Κάρτα Σταθμού Α, ερώτηση 1 και 4</td></tr>
+              <tr><td>Γνώσεις</td><td>Ορίζει setpoint, υστέρηση, cut-in, cut-out, differential και διακρίνει χειροκίνητο από αυτόματο reset.</td><td>Κάρτα Σταθμού Β, ερωτήσεις 1–3</td></tr>
+              <tr><td>Γνώσεις</td><td>Αναφέρει τη σχέση των τριών αντιστάσεων του μονοφασικού κινητήρα και το όριο μόνωσης του εργαστηρίου.</td><td>Κάρτα Σταθμού Γ, ερωτήσεις 1–3</td></tr>
+              <tr><td>Δεξιότητες</td><td>Υπολογίζει START/STOP από setpoint και υστέρηση, και cut-in από cut-out και differential — με μονάδα.</td><td>Μίνι διαγώνισμα, ερωτήσεις 2 και 3</td></tr>
+              <tr><td>Δεξιότητες</td><td>Διαβάζει ένα ζεύγος τιμών (δύο αντιστάσεις, δύο πιέσεις, τιμή και όριο) και βγάζει <em>μία</em> διάγνωση με αιτιολόγηση.</td><td>Σταθμός Γ, ερώτηση 4 · Σταθμός Β, ερώτηση 4</td></tr>
+              <tr><td>Δεξιότητες</td><td>Εντοπίζει πού χάνεται μονάδα σε μια απάντηση και τη διορθώνει μόνος του, με το κλειδί στο χέρι.</td><td>Φάση 6 — διόρθωση από ομότιμους</td></tr>
+              <tr><td>Στάσεις</td><td>Δηλώνει <em>γραπτά</em> δύο περιοχές που θα ξαναδιαβάσει και ένα λάθος που δεν θα επαναλάβει.</td><td>Συμβόλαιο μελέτης, Φάση 7</td></tr>
+              <tr><td>Στάσεις</td><td>Δέχεται τη διόρθωση συμμαθητή χωρίς να την εκλάβει ως κρίση — και διορθώνει χωρίς να «χαρίζει».</td><td>Παρατήρηση στη Φάση 6, ρουμπρίκα</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ican">
+          <h4>Διατύπωση για τους εκπαιδευόμενους — «Μπορώ να…»</h4>
+          <ul>
+            <li>… πω τι μετράω με πολύμετρο σε Ω, τι σε mV και τι ελέγχω με συνέχεια — χωρίς να κοιτάξω το τετράδιο.</li>
+            <li>… προβλέψω αν η αντίσταση ενός NTC θα πέσει ή θα ανέβει όταν ζεσταθεί, και γιατί.</li>
+            <li>… υπολογίσω πότε ξεκινά και πότε σταματά ο συμπιεστής, αν μου δοθούν setpoint και υστέρηση.</li>
+            <li>… εξηγήσω γιατί ο LP ξανακλείνει μόνος του και ο HP <em>όχι</em>.</li>
+            <li>… δείξω με τρεις μετρήσεις αν ένα μοτέρ είναι καλό, κομμένο ή γειωμένο.</li>
+            <li>… γράψω μια απάντηση που περιέχει <strong>αριθμό, μονάδα και «επειδή…»</strong> — όχι μόνο συμπέρασμα.</li>
+            <li>… πω τι θα πέσει στο διαγώνισμα, με πόσες μονάδες και σε πόσα λεπτά.</li>
+          </ul>
+        </div>
+
+        <div class="why">
+          <h4>Γιατί KSA και «Μπορώ να…»</h4>
+          <p>Η διάκριση KSA υποχρεώνει τον σχεδιασμό να έχει <em>διαφορετική δραστηριότητα</em> για κάθε κατηγορία:
+          ανάκληση για γνώσεις, υπολογισμό και διάγνωση για δεξιότητες, γραπτή δέσμευση για στάσεις. Χωρίς αυτό,
+          ένα «επαναληπτικό» γίνεται ένα ακόμη μάθημα με τον καθηγητή να μιλά.</p>
+          <p>Οι δηλώσεις «Μπορώ να…» κάνουν τα κριτήρια ορατά πριν από την εξέταση: ό,τι αξιολογείται μπορεί να
+          ειπωθεί σε πρώτο πρόσωπο από τον μαθητή <a class="cite" href="#ref-hattie">[Hattie &amp; Timperley, 2007]</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3. ΠΡΟΦΙΛ ===== -->
+    <section id="profile" aria-labelledby="profile-title">
+      <div class="card">
+        <h2 class="section-title" id="profile-title"><span class="num">3</span> Προφίλ Εκπαιδευομένων &amp; Αρχές</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Έξι παραδοχές για το κοινό του Εσπερινού ΕΠΑΛ, καθεμία με συγκεκριμένη συνέπεια για <em>αυτό</em> το δίωρο.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Παραδοχές για το κοινό και διδακτικές συνέπειες</caption>
+            <thead>
+              <tr><th scope="col">Παραδοχή</th><th scope="col">Διδακτική συνέπεια στο δίωρο της επανάληψης</th><th scope="col">Θεωρητική βάση</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ενήλικοι με ρόλους (εργασία, οικογένεια)</td><td>Κάθε φάση ανακοινώνεται με το όνομά της και τη διάρκειά της <em>πριν</em> ξεκινήσει· κανείς δεν ρωτά «πότε τελειώνουμε».</td><td>Knowles — Ανδραγωγική</td></tr>
+              <tr><td>Επαγγελματική εμπειρία στον κλάδο</td><td>Στον Σταθμό Γ ζητείται από όποιον έχει δουλέψει σε μοτέρ να πει πρώτος τη διάγνωση — η εμπειρία γίνεται πόρος, όχι ανταγωνισμός με τον καθηγητή.</td><td>Kolb · Lave &amp; Wenger</td></tr>
+              <tr><td>Μεγάλη απόσταση από τη σχολική τάξη</td><td>Καμία βαθμολογία στο μίνι διαγώνισμα· το λάθος καταγράφεται ως δεδομένο και διορθώνεται από τον διπλανό, όχι από τον καθηγητή.</td><td>Bandura · Dweck</td></tr>
+              <tr><td>Φόβος έκθεσης άγνοιας μπροστά σε συναδέλφους</td><td>Η κάρτα γυρίζει με την απάντηση στην πλάτη: κανείς δεν απαντά «στα τυφλά» μπροστά σε όλους· η διόρθωση γίνεται στο χαρτί.</td><td>Edmondson</td></tr>
+              <tr><td>Ετερογενές επίπεδο</td><td>Τρεις σταθμοί με διαβαθμισμένη δυσκολία (Α: ανάγνωση, Β: υπολογισμός, Γ: διάγνωση) και ρόλοι που εναλλάσσονται ώστε ο δυνατός να γίνει «ελεγκτής».</td><td>Tomlinson · Vygotsky</td></tr>
+              <tr><td>Παρόντες μετά από οκτάωρο</td><td>Καμία εισήγηση μεγαλύτερη από 6′· το δίωρο έχει δύο «κίνητρα» (σταθμοί) και ένα σύντομο γραπτό, ώστε η προσοχή να ανανεώνεται.</td><td>Deci &amp; Ryan</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--info">
+          <span class="callout__icon" aria-hidden="true">👥</span>
+          <div>
+            <p><strong>Τμήμα 7 ατόμων — οι τρεις ομάδες είναι σταθερές σε όλο το δίωρο:</strong>
+            Ομάδα Α (3) · Ομάδα Β (2) · Ομάδα Γ (2). Κάθε ομάδα περνά από τους τρεις σταθμούς σε κύκλο 8′.
+            Μέσα στην ομάδα οι ρόλοι είναι <strong>χειριστής κάρτας · καταγραφέας · ελεγκτής</strong> και
+            αλλάζουν σε κάθε σταθμό, ώστε κάθε μαθητής να κάνει και τα τρία.</p>
+            <p class="muted">Ο «ελεγκτής» δεν είναι τιμωρία: ελέγχει αν η απάντηση έχει <em>μονάδα</em> και
+            <em>«επειδή»</em>, και έχει δικαίωμα να ζητήσει επανάληψη. Είναι ο ρόλος που κρατά την ποιότητα
+            της απάντησης χωρίς να μιλά ο καθηγητής.</p>
+          </div>
+        </div>
+
+        <p class="muted">
+          <strong>Ειδικά για αυτό το δίωρο:</strong> η επανάληψη μπροστά σε συναδέλφους είναι πιο απειλητική από
+          την πρώτη διδασκαλία — στην πρώτη «δεν το ξέρει κανείς ακόμη», στην επανάληψη «υποτίθεται ότι το ξέρει».
+          Γι' αυτό η πρώτη ερώτηση της Φάσης 1 απαντιέται <em>γραπτά και ανώνυμα</em> και διαβάζεται από τον
+          καθηγητή, όχι από τον μαθητή.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== 4. ΧΡΟΝΟΔΙΑΓΡΑΜΜΑ ===== -->
+    <section id="flow" aria-labelledby="flow-title">
+      <div class="card">
+        <h2 class="section-title" id="flow-title"><span class="num">4</span> Χρονοδιάγραμμα 80λέπτου (2 × 40′ + Διάλειμμα)</h2>
+        <div class="section-rule"></div>
+
+        <h3>Με μια ματιά</h3>
+        <div class="glance">
+          <div class="glance__cell"><h5>Μπλοκ 1 (0′–40′)</h5><p>Χάρτης → 5 ερωτήσεις-πρόκληση → 3 σταθμοί × 8′ → 3 κανόνες</p></div>
+          <div class="glance__cell"><h5>Διάλειμμα (40′–50′)</h5><p>10 λεπτά ανάπαυλας — χωρίς μελέτη</p></div>
+          <div class="glance__cell"><h5>Μπλοκ 2 (50′–90′)</h5><p>Γέφυρα → μίνι διαγώνισμα 12′ → διόρθωση 7′ → πλάνο 8′ → συμβόλαιο 7′ → κλείσιμο 4′</p></div>
+          <div class="glance__cell"><h5>Κοινωνικές μορφές</h5><p>Ολομέλεια → ομάδες 2-2-3 σε κύκλο → ατομικά → ζεύγη → ολομέλεια</p></div>
+          <div class="glance__cell"><h5>Παραδοτέα</h5><p>Κάρτες σταθμών (στο τετράδιο) · μίνι διαγώνισμα · συμβόλαιο μελέτης</p></div>
+          <div class="glance__cell"><h5>Αξιολόγηση</h5><p>Διαγνωστική &amp; διαμορφωτική — κανένας βαθμός</p></div>
+        </div>
+
+        <h3>Αναλυτικό χρονοδιάγραμμα</h3>
+        <div class="timeline" role="list">
+          <div class="timeline__item timeline__item--safety" role="listitem">
+            <div class="timeline__time">0′–6′ · Μπλοκ 1 · Φάση 1</div>
+            <div class="timeline__text"><strong>Υποδοχή &amp; χάρτης αυτοαξιολόγησης.</strong> Χαιρετισμός με το όνομα, ανακοίνωση του σκοπού και των δύο μπλοκ. Κάθε μαθητής γράφει σε χαρτάκι, ανώνυμα, «ποια περιοχή νιώθω πιο αδύναμη» (1–2 λόγια). Ο καθηγητής τα ταξινομεί στον πίνακα σε πέντε στήλες.</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">6′–10′ · Μπλοκ 1 · Φάση 2</div>
+            <div class="timeline__text"><strong>Πέντε ερωτήσεις-πρόκληση.</strong> Μία ερώτηση ανά περιοχή, απαντιέται προφορικά από διαφορετικό μαθητή, <em>χωρίς διόρθωση</em>. Ο καθηγητής γράφει τις απαντήσεις ως έχουν — είναι το σημείο εκκίνησης, όχι ο στόχος.</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">10′–34′ · Μπλοκ 1 · Φάση 3</div>
+            <div class="timeline__text"><strong>Τρεις σταθμοί × 8′ — κύκλος ομάδων.</strong> Ομάδες Α (3), Β (2), Γ (2). Κάθε 8′ οι ομάδες αλλάζουν σταθμό: <strong>Α</strong> αισθητήρια → <strong>Β</strong> θερμοστάτης &amp; πιεζοστάτες → <strong>Γ</strong> κινητήρας. Η απάντηση είναι στην πλάτη της κάρτας· ο «ελεγκτής» επιβεβαιώνει μονάδα και αιτιολόγηση.</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">34′–40′ · Μπλοκ 1 · Φάση 4</div>
+            <div class="timeline__text"><strong>Τρία λάθη, τρεις κανόνες.</strong> Ο καθηγητής γράφει στον πίνακα τα τρία πιο συχνά λάθη <em>όπως τα άκουσε</em> και δίπλα τον κανόνα που τα διορθώνει. Δεν ονομάζει ποιος τα έκανε. Κλείσιμο μπλοκ 1 πριν το διάλειμμα.</div>
+          </div>
+          <div class="timeline__item timeline__item--break" role="listitem">
+            <div class="timeline__time">40′–50′ · ΔΙΑΛΕΙΜΜΑ</div>
+            <div class="timeline__text"><strong>Διάλειμμα 10 λεπτών.</strong> Οι μαθητές απομακρύνονται από τις κάρτες. Ο καθηγητής τακτοποιεί τους τρεις σταθμούς για τον κύκλο του μπλοκ 2 αν χρειάζεται και ελέγχει ότι τα κλειδιά είναι κλειστά.</div>
+          </div>
+          <div class="timeline__item timeline__item--resume" role="listitem">
+            <div class="timeline__time">50′–52′ · Μπλοκ 2 · Φάση 5</div>
+            <div class="timeline__text"><strong>Γέφυρα επανασύνδεσης.</strong> Δύο ερωτήσεις ανάκλησης, απαντιούνται από <em>άλλους</em> μαθητές από αυτούς που απάντησαν το πρωί. Ανακοινώνεται τι ακολουθεί: μίνι διαγώνισμα 12′.</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">52′–64′ · Μπλοκ 2 · Φάση 6</div>
+            <div class="timeline__text"><strong>Μίνι διαγώνισμα — 12 λεπτά, 10 μονάδες.</strong> Πέντε ερωτήσεις, μία ανά περιοχή, ατομικά και χωρίς σημειώσεις. Δεν βαθμολογείται· το φύλλο μένει στον μαθητή μετά τη διόρθωση.</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">64′–71′ · Μπλοκ 2 · Φάση 7</div>
+            <div class="timeline__text"><strong>Διόρθωση από ομότιμους.</strong> Ανταλλαγή φύλλων, διόρθωση με το κλειδί, καταγραφή λαθών στον πίνακα ανά ερώτηση (πόσοι το έχασαν). Ο καθηγητής δεν διορθώνει φύλλα.</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">71′–79′ · Μπλοκ 2 · Φάση 8</div>
+            <div class="timeline__text"><strong>Το πλάνο του γραπτού.</strong> Δομή, βάρη, λεπτά, κανόνες μοριοδότησης, «τι δεν εξετάζεται». Ο καθηγητής απαντά σε ερωτήσεις <em>μόνο</em> για τη μορφή — ποτέ για νούμερα ασκήσεων.</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">79′–86′ · Μπλοκ 2 · Φάση 9</div>
+            <div class="timeline__text"><strong>Συμβόλαιο μελέτης &amp; κύκλος 3-2-1.</strong> Κάθε μαθητής γράφει: 2 περιοχές που θα ξαναδιαβάσει, 1 λάθος που δεν θα επαναλάβει, 1 ερώτηση που θέλει απάντηση. Μετά, κύκλος: 1′ ανά μαθητή (7′).</div>
+          </div>
+          <div class="timeline__item" role="listitem">
+            <div class="timeline__time">86′–90′ · Μπλοκ 2 · Φάση 10</div>
+            <div class="timeline__text"><strong>Κλείσιμο &amp; τακτοποίηση.</strong> Τρεις προτάσεις σύνοψης από τον καθηγητή, μία από κάθε μπλοκ. Τα τραπέζια καθαρίζουν, τα χαρτάκια αυτοαξιολόγησης παραμένουν στον φάκελο του τμήματος.</div>
+          </div>
+        </div>
+
+        <div class="callout callout--warn">
+          <span class="callout__icon" aria-hidden="true">💡</span>
+          <div>
+            <p><strong>Κανόνας ευελιξίας:</strong> αν κάτι «κολλήσει», θυσιάζεται χρόνος από τη <strong>Φάση 8</strong>
+            (το πλάνο — μπορεί να σταλεί γραπτό στο τετράδιο) ή από τη <strong>Φάση 9</strong> (ο κύκλος γίνεται 30″
+            ανά μαθητή). <em>Ποτέ</em> από τη Φάση 6 (το μίνι διαγώνισμα) ή τη Φάση 7 (τη διόρθωση): είναι ο λόγος
+            που υπάρχει το δίωρο.</p>
+            <p class="muted">Έλεγχος αθροίσματος: 6 + 4 + 24 + 6 = 40′ · 2 + 12 + 7 + 8 + 7 + 4 = 40′ · σύνολο 80′
+            διδασκαλίας + 10′ διάλειμμα = 90′ ρολόι (από την έναρξη ώς τη λήξη του διώρου).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5. ΔΙΑΛΕΙΜΜΑ ===== -->
+    <section id="break" aria-labelledby="break-title">
+      <div class="card">
+        <h2 class="section-title" id="break-title"><span class="num">5</span> Το Διάλειμμα ως Παιδαγωγικό Εργαλείο</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Το διάλειμμα δεν είναι «κενό» ανάμεσα σε δύο μπλοκ: είναι η φάση όπου ο εγκέφαλος σταθεροποιεί ό,τι
+          μόλις ανακλήθηκε. Γι' αυτό έχει <strong>κανόνες</strong> — και έναν κανόνα που εκπλήσσει τους μαθητές.
+        </p>
+
+        <div class="phase-grid">
+          <div class="mini">
+            <h5>Τι κάνουν οι μαθητές</h5>
+            <p>Καφές, νερό, τουαλέτα, άτυπη κουβέντα. <strong>Χωρίς</strong> κάρτες, <strong>χωρίς</strong> τετράδιο,
+            <strong>χωρίς</strong> «να μου εξηγήσεις αυτό που δεν κατάλαβα». Η ανάπαυλα είναι μέρος της δουλειάς.</p>
+          </div>
+          <div class="mini">
+            <h5>Τι κάνει ο καθηγητής</h5>
+            <p>Τακτοποιεί τους σταθμούς, βεβαιώνεται ότι τα κλειδιά είναι κλειστά, σημειώνει τα τρία λάθη της
+            Φάσης 4 στον πίνακα (αν δεν πρόλαβε) και ετοιμάζει τα φύλλα του μίνι διαγωνίσματος <em>χωρίς</em> να
+            τα μοιράσει.</p>
+          </div>
+          <div class="mini">
+            <h5>Διάρκεια</h5>
+            <p>Αυστηρά 10 λεπτά, ανακοινωμένα από την αρχή. Το «άλλο πέντε λεπτά» κοστίζει ακριβώς τα πέντε
+            λεπτά του μίνι διαγωνίσματος — και το μίνι διαγώνισμα δεν αναπληρώνεται.</p>
+          </div>
+          <div class="mini">
+            <h5>Ο κανόνας που εκπλήσσει</h5>
+            <p><strong>Δεν διαβάζουν στο διάλειμμα.</strong> Αν κάποιος ανοίξει τετράδιο, του λέμε ευγενικά:
+            «κλείσ' το — τώρα δουλεύει η μνήμη, όχι το μάτι». Είναι αλήθεια, όχι σλόγκαν: η ανάπαυλα μετά την
+            ανάκληση βελτιώνει τη συγκράτηση.</p>
+          </div>
+        </div>
+
+        <div class="callout callout--warn">
+          <span class="callout__icon" aria-hidden="true">☕</span>
+          <div>
+            <p><strong>Τι λέγεται φωναχτά στα 38′:</strong> «Σε δύο λεπτά σταματάμε. Αφήστε τις κάρτες όπως είναι —
+            δεν τις τακτοποιείτε, δεν τις αντιγράφετε. Στο διάλειμμα δεν διαβάζουμε: πίνουμε καφέ. Στις 50′
+            ακριβώς ξεκινάμε με πέντε ερωτήσεις και μετά γράφετε δώδεκα λεπτά.»</p>
+          </div>
+        </div>
+
+        <div class="why">
+          <h4>Γιατί 10′ και γιατί χωρίς μελέτη</h4>
+          <p><strong>Διαχωρισμός:</strong> η ανάκληση σε δύο χωριστά μπλοκ, με κενό ανάμεσα, δίνει καλύτερη
+          μακροπρόθεσμη συγκράτηση από μία συνεχή συνεδρία (spacing effect) <a class="cite" href="#ref-cepeda">[Cepeda κ.ά., 2006]</a>.</p>
+          <p><strong>Παρεμβολή:</strong> αν ο μαθητής διαβάσει στο διάλειμμα, το μπλοκ 2 μετράει την <em>άμεση
+          μνήμη</em> του τετραδίου, όχι τη γνώση του — και το μίνι διαγώνισμα χάνει τη διαγνωστική του αξία.</p>
+          <p><strong>Κόπωση:</strong> σε ενήλικες μετά από εργάσιμη ημέρα, η προσοχή πέφτει μετρήσιμα μετά τα 40′
+          συνεχούς γνωστικής δουλειάς· η ανάπαυλα δεν είναι παραχώρηση, είναι συνθήκη για να λειτουργήσει το
+          δεύτερο μισό.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. ΦΑΣΕΙΣ ===== -->
+    <section id="phases" aria-labelledby="phases-title">
+      <div class="card">
+        <h2 class="section-title" id="phases-title"><span class="num">6</span> Οι Φάσεις</h2>
+        <div class="section-rule"></div>
+        <p class="lead">
+          Κάθε φάση: <strong>Στόχος → Δραστηριότητα → Ρόλος εκπαιδευτικού → Οργάνωση → Script → Γιατί → Ευελιξία</strong>.
+          Οι δέκα φάσεις είναι διαδοχικές· τα λεπτά τους αθροίζουν στα δύο μπλοκ των 40′.
+        </p>
+
+        <!-- ΦΑΣΗ 1 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 1</span>
+            <span class="badge-block">Μπλοκ 1</span>
+            <span class="phase__title">Υποδοχή &amp; Χάρτης Αυτοαξιολόγησης</span>
+            <span class="badge-k">6΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Ψυχολογική ασφάλεια + ορατή αφετηρία. Κανείς δεν ξεκινά «από το μηδέν» και κανείς δεν εκτίθεται ονομαστικά.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Χαιρετισμός με το όνομα. Ανακοίνωση σκοπού και των δύο μπλοκ. Κάθε μαθητής γράφει σε χαρτάκι, <em>ανώνυμα</em>, «ποια από τις πέντε περιοχές νιώθω πιο αδύναμη». Ο καθηγητής ταξινομεί τα χαρτάκια σε πέντε στήλες στον πίνακα.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Δεν σχολιάζει κανένα χαρτάκι. Μετράει φωναχτά: «τρία είπαν θερμοστάτες, δύο κινητήρα…». Η κατανομή είναι το πρώτο δεδομένο του διώρου.</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Ολομέλεια σε «Π»· χαρτάκια 7 × 7 εκ. και στυλό σε κάθε θέση.</p></div>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Καλησπέρα. Σήμερα δεν μαθαίνουμε καινούργιο πράγμα — <em>θυμόμαστε</em>. Πέντε εργαστήρια: αισθητήρια, θερμοστάτες, LP, HP, μοτέρ. Την επόμενη εβδομάδα γράφετε. Δεν βαθμολογείται τίποτα σήμερα· ούτε το μίνι διαγώνισμα.</blockquote>
+              <blockquote>Πριν ξεκινήσουμε, θέλω κάτι από εσάς: γράψτε σε αυτό το χαρτάκι <strong>μία</strong> περιοχή που νιώθετε πιο αδύναμη. Χωρίς όνομα. Δεν θα σας ρωτήσω ποιος το έγραψε — θέλω να ξέρω πού να ρίξω το βάρος.</blockquote>
+              <blockquote>Τα δύο μπλοκ: στο πρώτο δουλεύουμε σε τρεις σταθμούς με κάρτες. Στο δεύτερο γράφετε δώδεκα λεπτά — και μετά διορθώνετε ο ένας του άλλου, όχι εγώ. Στο τέλος θα ξέρετε ακριβώς τι θα πέσει και πόσες μονάδες παίρνει.</blockquote>
+            </div>
+
+            <div class="udl">
+              <span>✍ UDL: γραπτή, ανώνυμη αφετηρία</span>
+              <span>🎯 UDL: σκοπός και ρολόι ανακοινώνονται</span>
+              <span>🤝 UDL: κανείς δεν εκτίθεται προφορικά</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Ψυχολογική ασφάλεια:</strong> η ανώνυμη δήλωση αδυναμίας επιτρέπει στον ενήλικο να παραδεχθεί κενό χωρίς κόστος <a class="cite" href="#ref-edmondson">[Edmondson, 1999]</a>.</p>
+              <p><strong>Μεταγνώση:</strong> η ερώτηση «πού νιώθω αδύναμος» ενεργοποιεί την παρακολούθηση της δικής του γνώσης — προϋπόθεση για να ωφεληθεί από τη διόρθωση αργότερα <a class="cite" href="#ref-flavell">[Flavell, 1979]</a>.</p>
+              <p><strong>Στοχοθεσία:</strong> ο σκοπός και το ρολόι λέγονται πριν, όχι στο τέλος <a class="cite" href="#ref-locke">[Locke &amp; Latham, 2002]</a>.</p>
+            </div>
+
+            <div class="callout callout--info">
+              <span class="callout__icon" aria-hidden="true">⏱</span>
+              <div><p><strong>Ευελιξία:</strong> αν αργήσουν δύο μαθητές, το χαρτάκι δίνεται και σε αυτούς μόλις
+              μπουν — η φάση δεν επαναλαμβάνεται. Αν τα χαρτάκια δείξουν ότι <em>όλοι</em> δηλώνουν την ίδια περιοχή,
+              το ξέρεις από τώρα: εκείνη η περιοχή θα πάρει την πρώτη θέση στη Φάση 7 και στο πλάνο της Φάσης 8.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 2 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 2</span>
+            <span class="badge-block">Μπλοκ 1</span>
+            <span class="phase__title">Πέντε Ερωτήσεις-Πρόκληση</span>
+            <span class="badge-k">4΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Ενεργοποίηση των πέντε περιοχών σε τέσσερα λεπτά — και καταγραφή της πρώτης απάντησης, σωστής ή όχι.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Μία ερώτηση ανά περιοχή. Απαντά <em>διαφορετικός</em> μαθητής σε κάθε μία, με μία πρόταση. Ο καθηγητής γράφει την απάντηση στον πίνακα <strong>όπως ειπώθηκε</strong> και δεν τη διορθώνει.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Κρατά χρόνο 45″ ανά ερώτηση. Επιμένει: «μία πρόταση, με νούμερο αν γίνεται». Σημειώνει ποιος απάντησε τι, για να καλέσει <em>άλλους</em> στη Φάση 5.</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Ολομέλεια. Πέντε γραμμές στον πίνακα, μία ανά ερώτηση, με κενό δεξιά για τη διόρθωση το βράδυ.</p></div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <caption class="sr-only">Οι πέντε ερωτήσεις-πρόκληση, μία ανά περιοχή</caption>
+                <thead><tr><th scope="col">#</th><th scope="col">Ερώτηση</th><th scope="col">Η απάντηση-στόχος (δεν λέγεται τώρα)</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>«Με πολύμετρο, τι μετράω σε Ω και τι σε mV;»</td><td>Ω: αντίσταση (θερμίστορ, περιέλιξη, μόνωση) · mV: τάση θερμοστοιχείου</td></tr>
+                  <tr><td>2</td><td>«Setpoint 4 °C, υστέρηση 2 °C: πότε ξεκινά και πότε σταματά ο συμπιεστής;»</td><td>Ξεκινά 5 °C, σταματά 3 °C (START = STOP + DIFF)</td></tr>
+                  <tr><td>3</td><td>«Ο LP κόβει στα 2 bar. Τι κάνει ο συμπιεστής στα 2,5 bar;»</td><td>Τίποτα — είναι στη ζώνη υστέρησης και κρατά την κατάστασή του</td></tr>
+                  <tr><td>4</td><td>«Γιατί ο HP δεν ξαναξεκινά μόνος του όταν πέσει η πίεση;»</td><td>Έχει χειροκίνητο reset: ο τεχνικός πρέπει να δει το αίτιο της υπερπίεσης</td></tr>
+                  <tr><td>5</td><td>«Δύο αντιστάσεις, 9 Ω και 28 Ω. Τι περιμένεις στην τρίτη μέτρηση;»</td><td>37 Ω — η μέτρηση S–R είναι το άθροισμα των δύο άλλων</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Πέντε ερωτήσεις, μία ανά περιοχή, σαράντα πέντε δευτερόλεπτα η καθεμία. Δεν διορθώνω τίποτα τώρα — γράφω αυτό που λέτε και το κοιτάμε μετά. Ποιος θέλει την πρώτη; <em>(Επιλέγει μαθητή που δεν έχει μιλήσει πολύ πρόσφατα.)</em></blockquote>
+              <blockquote>Ωραία — «αντίσταση και τάση». Το κρατάω έτσι. Πάμε στην επόμενη. <em>(Στην τρίτη: αν απαντήσουν «ξεκινά», γράφει «ξεκινά» και προχωρά.)</em></blockquote>
+            </div>
+
+            <div class="udl">
+              <span>❓ UDL: πρόβλεψη πριν την αποκάλυψη</span>
+              <span>🗣 UDL: μία πρόταση, όχι έκθεση</span>
+              <span>✍ UDL: η λάθος απάντηση μένει στον πίνακα ως δεδομένο</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Testing effect:</strong> ακόμη και μια <em>αποτυχημένη</em> προσπάθεια ανάκλησης, όταν ακολουθείται από τη σωστή απάντηση, βελτιώνει τη συγκράτηση περισσότερο από την παθητική ανάγνωση <a class="cite" href="#ref-roediger">[Roediger &amp; Karpicke, 2006]</a>.</p>
+              <p><strong>Διαγνωστική αξία:</strong> οι πέντε απαντήσεις είναι η «ακτινογραφία» της τάξης πριν από τους σταθμούς· δείχνουν αν το πρόβλημα είναι ορολογία ή λογική <a class="cite" href="#ref-black">[Black &amp; Wiliam, 1998]</a>.</p>
+            </div>
+
+            <div class="callout callout--warn">
+              <span class="callout__icon" aria-hidden="true">⚠</span>
+              <div><p><strong>Ο πειρασμός που πρέπει να αντισταθείς:</strong> να διορθώσεις αμέσως τη λάθος απάντηση.
+              Αν το κάνεις, χάνεις τη μέτρηση και επιβεβαιώνεις ότι «ο καθηγητής ξέρει». Η διόρθωση έρχεται στη
+              Φάση 4, με τον κανόνα — όχι με το όνομα.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 3 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 3</span>
+            <span class="badge-block">Μπλοκ 1</span>
+            <span class="phase__title">Τρεις Σταθμοί × 8′ — Ανάκληση με την Απάντηση στην Πλάτη</span>
+            <span class="badge-k">24΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Κάθε μαθητής να περάσει και από τις τρεις περιοχές, να απαντήσει <em>γραπτά</em> και να ελέγξει μόνος του με την κάρτα.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Τρεις σταθμοί × 8′. Οι ομάδες Α (3), Β (2), Γ (2) κυκλώνουν με σταθερή φορά. Σε κάθε σταθμό: 4 ερωτήσεις, 5 λεπτά απάντηση, 3 λεπτά έλεγχος με την πλάτη της κάρτας.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Κυκλοφορεί, δεν δίνει απαντήσεις, ρωτά «τι σε έκανε να το γράψεις έτσι;». Στο 6ο λεπτό λέει «ένα λεπτό για έλεγχο» και στο 8ο «αλλάζουμε».</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Τρία τραπέζια σε «Π», μία κάρτα Α4 ανά σταθμό διπλωμένη στα δύο (ερωτήσεις μπροστά, απαντήσεις πίσω), ένα φύλλο καταγραφής ανά ομάδα.</p></div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <caption class="sr-only">Κύκλος ομάδων στους τρεις σταθμούς</caption>
+                <thead><tr><th scope="col">Γύρος</th><th scope="col">Ομάδα Α (3)</th><th scope="col">Ομάδα Β (2)</th><th scope="col">Ομάδα Γ (2)</th></tr></thead>
+                <tbody>
+                  <tr><td>10′–18′</td><td>Σταθμός 1 — Αισθητήρια</td><td>Σταθμός 2 — Θερμοστάτης &amp; LP</td><td>Σταθμός 3 — Κινητήρας</td></tr>
+                  <tr><td>18′–26′</td><td>Σταθμός 2 — Θερμοστάτης &amp; LP</td><td>Σταθμός 3 — Κινητήρας</td><td>Σταθμός 1 — Αισθητήρια</td></tr>
+                  <tr><td>26′–34′</td><td>Σταθμός 3 — Κινητήρας</td><td>Σταθμός 1 — Αισθητήρια</td><td>Σταθμός 2 — Θερμοστάτης &amp; LP</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Τρεις σταθμοί, οκτώ λεπτά ο καθένας. Σε κάθε σταθμό γράφετε τις απαντήσεις στο τετράδιο <em>πριν</em> γυρίσετε την κάρτα — αλλιώς δεν μετράει. Η απάντηση είναι πίσω· δεν ρωτάτε εμένα, γυρίζετε την κάρτα.</blockquote>
+              <blockquote>Ρόλοι μέσα στην ομάδα: ένας κρατά την κάρτα, ένας γράφει, ένας ελέγχει αν η απάντηση έχει <strong>μονάδα</strong> και <strong>«επειδή»</strong>. Στον επόμενο σταθμό αλλάζετε ρόλους.</blockquote>
+              <blockquote>Στα 6 λεπτά λέω «ένα λεπτό για έλεγχο». Στα 8 λέω «αλλάζουμε» και δεν περιμένω κανέναν — όποιος δεν πρόλαβε, συμπληρώνει στο διάλειμμα; <em>Όχι.</em> Το αφήνει και το ξαναβλέπει στο σπίτι· εδώ κρατάμε τον ρυθμό.</blockquote>
+            </div>
+
+            <div class="udl">
+              <span>✋ UDL: γραπτή απάντηση πριν τον έλεγχο</span>
+              <span>👥 UDL: ρόλοι που εναλλάσσονται</span>
+              <span>⏱ UDL: σταθερός ρυθμός 8′ με ανακοίνωση</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Ανάκληση με ανατροφοδότηση:</strong> η άμεση επαλήθευση με την πλάτη της κάρτας δίνει διόρθωση <em>όσο ο μαθητής θυμάται τι είχε απαντήσει</em> — η στιγμή αυτή είναι η πιο αποδοτική για μάθηση <a class="cite" href="#ref-roediger">[Roediger &amp; Karpicke, 2006]</a>.</p>
+              <p><strong>Κοινωνική μάθηση:</strong> ο ρόλος του «ελεγκτή» βάζει τον μαθητή στη θέση του κριτή — και η κρίση απαιτεί κατανόηση, όχι αντιγραφή <a class="cite" href="#ref-lave">[Lave &amp; Wenger, 1991]</a>.</p>
+              <p><strong>Διαβαθμισμένη δυσκολία:</strong> Σταθμός 1 ανάγνωση, Σταθμός 2 υπολογισμός, Σταθμός 3 διάγνωση — κανείς δεν «κολλάει» και στους τρεις <a class="cite" href="#ref-tomlinson">[Tomlinson, 2001]</a>.</p>
+            </div>
+
+            <div class="callout callout--info">
+              <span class="callout__icon" aria-hidden="true">⏱</span>
+              <div><p><strong>Ευελιξία:</strong> αν μια ομάδα «κολλήσει» σε έναν σταθμό, ο καθηγητής δεν λύνει —
+              δίνει την πρώτη λέξη της απάντησης («ξεκινά…») και φεύγει. Αν χαθεί ένας ολόκληρος γύρος, κόβεται
+              ο τρίτος γύρος και οι ομάδες κάνουν μόνο δύο σταθμούς· η Φάση 4 κρατά 6′.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 4 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 4</span>
+            <span class="badge-block">Μπλοκ 1</span>
+            <span class="phase__title">Τρία Λάθη, Τρεις Κανόνες</span>
+            <span class="badge-k">6΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Να μετατραπούν τα λάθη των σταθμών σε τρεις κανόνες που μένουν στον πίνακα μέχρι το τέλος.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Ο καθηγητής γράφει τα τρία πιο συχνά λάθη <em>όπως τα άκουσε</em>, χωρίς ονόματα, και δίπλα τον κανόνα. Η τάξη ψηφίζει ποιο λάθος ήταν το πιο «ακριβό».</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Δεν λέει «ποιος το έκανε». Λέει «αυτό ακούστηκε τρεις φορές». Η διατύπωση του κανόνα γράφεται από μαθητή στον πίνακα, όχι από τον καθηγητή.</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Πίνακας χωρισμένος σε τρεις ζώνες: «Λάθος» | «Κανόνας» | «Πού το βλέπεις στο γραπτό».</p></div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <caption class="sr-only">Τα τρία συχνότερα λάθη και οι κανόνες που τα διορθώνουν</caption>
+                <thead><tr><th scope="col">Λάθος που ακούστηκε</th><th scope="col">Κανόνας στον πίνακα</th><th scope="col">Πού το «πληρώνει» στο γραπτό</th></tr></thead>
+                <tbody>
+                  <tr><td>«37» χωρίς μονάδα· «2 bar» αντί «2,0 bar»</td><td><strong>Κανόνας 1:</strong> κάθε νούμερο γράφεται με τη μονάδα του — Ω, kΩ, MΩ, bar, °C, mV.</td><td>Θέμα Δ: χάνεται μονάδα σε κάθε ερώτηση χωρίς αυτήν</td></tr>
+                  <tr><td>«Ο LP ανοίγει όταν ανέβει η πίεση» / «cut-out = cut-in»</td><td><strong>Κανόνας 2:</strong> LP ανοίγει <em>κάτω</em> (cut-out), HP ανοίγει <em>πάνω</em> (cut-out). Το cut-in είναι πάντα η επιστροφή.</td><td>Θέμα Α και Β: κάθε Σ/Λ και κάθε επιλογή κρίνεται από αυτό</td></tr>
+                  <tr><td>«R(S-R) = R(C-S) + R(C-R)» γραμμένο ανάποδα ή με λάθος ζεύγη</td><td><strong>Κανόνας 3:</strong> η μέτρηση <em>μεταξύ των δύο άκρων</em> (S–R) ισούται με το άθροισμα των δύο μισών (C–S και C–R).</td><td>Θέμα Δ1 και Θέμα Ε: η διάγνωση κρίνεται από τη σχέση</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Τρία πράγματα ακούστηκαν πολλές φορές σήμερα — δεν λέω από ποιον. Πρώτο: νούμερα χωρίς μονάδα. Δεύτερο: μπέρδεμα cut-in με cut-out. Τρίτο: η σχέση των αντιστάσεων γραμμένη ανάποδα.</blockquote>
+              <blockquote>Θέλω έναν να μου γράψει τον πρώτο κανόνα στον πίνακα, με δικά του λόγια. <em>(Περιμένει.)</em> Ωραία — αυτός ο κανόνας μένει εκεί μέχρι τις 90′. Δεν τον σβήνω.</blockquote>
+            </div>
+
+            <div class="udl">
+              <span>🧠 UDL: λάθος χωρίς πρόσωπο</span>
+              <span>✍ UDL: ο κανόνας γράφεται από μαθητή</span>
+              <span>👁 UDL: μένει ορατός σε όλο το δίωρο</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Διαχείριση σφάλματος:</strong> το λάθος που ονομάζεται χωρίς πρόσωπο γίνεται αντικείμενο συζήτησης αντί για κρίση — και οι ενήλικοι δέχονται τη διόρθωση όταν δεν απειλείται η αυτοεικόνα τους <a class="cite" href="#ref-keith">[Keith &amp; Frese, 2005]</a>.</p>
+              <p><strong>Αγκύρωση:</strong> ένας κανόνας γραμμένος από τον ίδιο τον μαθητή στον πίνακα διαβάζεται ξανά και ξανά μέχρι το τέλος, χωρίς κόστος χρόνου <a class="cite" href="#ref-sweller">[Sweller, 1988]</a>.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 5 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 5</span>
+            <span class="badge-block">Μπλοκ 2</span>
+            <span class="phase__title">Γέφυρα Επανασύνδεσης</span>
+            <span class="badge-k">2΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Επαναφορά στο θέμα σε δύο λεπτά, με ανάκληση από <em>άλλους</em> μαθητές.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Δύο ερωτήσεις: «τι θυμάστε από τον σταθμό που μόλις αφήσατε;» και «ποιος κανόνας είναι στον πίνακα;». Απαντούν δύο μαθητές που δεν απάντησαν στη Φάση 2.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Δέχεται την απάντηση, προσθέτει μία λέξη αν χρειάζεται, ανακοινώνει το επόμενο βήμα: «δώδεκα λεπτά γραπτό».</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Ολομέλεια· οι μαθητές κάθονται ατομικά (όχι σε ομάδες) πριν το μίνι διαγώνισμα.</p></div>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Καλώς μας ξανά. Δύο πράγματα πριν γράψετε: ποιος μου λέει τι έμαθε στον τελευταίο σταθμό — και ποιος θυμάται τον δεύτερο κανόνα από τον πίνακα;</blockquote>
+              <blockquote>Ωραία. Τώρα δώδεκα λεπτά, ατομικά, χωρίς σημειώσεις. Πέντε ερωτήσεις, δέκα μονάδες. Δεν βαθμολογείται — γι' αυτό θέλω να γράψετε <em>αυτό που ξέρετε</em> και όχι αυτό που νομίζετε ότι θέλω να δω.</blockquote>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Ομαλή μετάβαση:</strong> τα δύο λεπτά γέφυρας αποτρέπουν το «χάσιμο» πέντε έως δέκα λεπτών μετά το διάλειμμα — το πιο συχνό χαμένο κομμάτι ενός διώρου.</p>
+              <p><strong>Spacing:</strong> η ανάκληση μετά από κενό είναι πιο δύσκολη και γι' αυτό πιο αποδοτική από την ανάκληση αμέσως μετά την ανάγνωση <a class="cite" href="#ref-cepeda">[Cepeda κ.ά., 2006]</a>.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 6 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 6</span>
+            <span class="badge-block">Μπλοκ 2</span>
+            <span class="phase__title">Μίνι Διαγώνισμα — 12′ / 10 μονάδες</span>
+            <span class="badge-k">12΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Μία ερώτηση ανά περιοχή, γραπτά, χωρίς σημειώσεις — η ίδια μορφή που θα συναντήσουν, σε μικρή κλίμακα.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Πέντε ερωτήσεις × 2 μονάδες. Τα φύλλα μοιράζονται με το πρόσωπο κάτω. Οι μαθητές γράφουν όνομα μόνο για την ανταλλαγή — δεν το βλέπει ο καθηγητής.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Χρονομέτρηση 12′. Ανακοινώνει «απομένουν 3 λεπτά» και «1 λεπτό». Δεν απαντά σε ερωτήσεις περιεχομένου — μόνο στη διατύπωση.</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Ατομικά θρανία, απόσταση· το κλειδί δεν είναι στην αίθουσα (είναι στον φάκελο, μοιράζεται στη Φάση 7).</p></div>
+            </div>
+
+            <div class="callout callout--danger">
+              <span class="callout__icon" aria-hidden="true">🚫</span>
+              <div>
+                <p><strong>Το μίνι διαγώνισμα δεν βαθμολογείται — και αυτό λέγεται φωναχτά.</strong> Ένα
+                βαθμολογημένο «πρόβα» κάνει τους μαθητές να κρύψουν τα λάθη τους, δηλαδή ακριβώς αυτά που
+                χρειάζεται η διάγνωση. Ο βαθμός θα έρθει από το γραπτό του επόμενου διώρου· εδώ μετράμε
+                <em>τι λείπει</em>, όχι <em>πόσο κάνει</em>.</p>
+                <p class="muted">Αν κάποιος ρωτήσει «θα μετρήσει;», η απάντηση είναι: «όχι — και γι' αυτό θέλω να
+                γράψεις την αλήθεια, όχι την τέλεια απάντηση».</p>
+              </div>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Δώδεκα λεπτά. Πέντε ερωτήσεις. Γράφετε ό,τι ξέρετε, με μονάδες — αν δεν ξέρετε κάτι,
+              γράφετε «δεν ξέρω» και προχωράτε. Το κενό είναι πληροφορία, δεν είναι ντροπή.</blockquote>
+            </div>
+
+            <div class="udl">
+              <span>📝 UDL: ίδια μορφή με το γραπτό, μικρότερη κλίμακα</span>
+              <span>⏱ UDL: 12′ με ορόσημα</span>
+              <span>🔒 UDL: ανώνυμο ως προς τον καθηγητή</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Δοκιμαστική εξέταση:</strong> η γραπτή ανάκληση υπό χρόνο είναι η πιο κοντινή προσομοίωση της τελικής εξέτασης — και η πιο αποδοτική προετοιμασία γι' αυτήν <a class="cite" href="#ref-roediger">[Roediger &amp; Karpicke, 2006]</a>.</p>
+              <p><strong>Μεταφορά μορφής:</strong> ο μαθητής εξασκείται στη <em>μορφή</em> της απάντησης (μονάδα, αιτιολόγηση, βήματα), που είναι το μισό της βαθμολογίας <a class="cite" href="#ref-wiggins">[Wiggins, 1993]</a>.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 7 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 7</span>
+            <span class="badge-block">Μπλοκ 2</span>
+            <span class="phase__title">Διόρθωση από Ομότιμους — 7′</span>
+            <span class="badge-k">7΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Κάθε μαθητής να δει το λάθος του <em>γραμμένο</em>, με το κλειδί στο χέρι, και η τάξη να ξέρει πόσοι έχασαν κάθε ερώτηση.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Ανταλλαγή φύλλων σε ζεύγη (η τριάδα τηρεί τρία φύλλα). Διόρθωση με το κλειδί. Ο διορθωτής γράφει δίπλα: ✓ / ✗ / «λείπει μονάδα». Στον πίνακα, δίπλα σε κάθε ερώτηση, γράφεται το πλήθος των ✗.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Δεν διορθώνει φύλλα. Γράφει τα πλήθη στον πίνακα και επιλέγει <em>μία</em> ερώτηση για ανάλυση — αυτή με τα περισσότερα ✗.</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Κλειδί σε μία κόλλα ανά ζεύγος, τυπωμένο· ή προβολή στον πίνακα. Τα φύλλα επιστρέφουν στον ιδιοκτήτη μετά τη διόρθωση.</p></div>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Ανταλλάξτε φύλλα. Διορθώνετε με το κλειδί — όχι με το τι νομίζετε. Αν η απάντηση έχει το σωστό νούμερο αλλά λείπει η μονάδα, γράφετε «λείπει μονάδα» και <em>δεν</em> το βάζετε ✗.</blockquote>
+              <blockquote>Πόσοι έχασαν την ερώτηση 2; <em>(Γράφει 4/7.)</em> Την 3; <em>(2/7.)</em> Ωραία — η 2 είναι το θέμα μας. Ποιος θέλει να πει με μια πρόταση <em>γιατί</em> έχασε; Δεν ρωτάω για να δικαιολογηθεί — ρωτάω για να διορθωθεί ο κανόνας.</blockquote>
+            </div>
+
+            <div class="udl">
+              <span>🤝 UDL: διόρθωση από συμμαθητή</span>
+              <span>📊 UDL: το λάθος γίνεται αριθμός στον πίνακα</span>
+              <span>🔁 UDL: το φύλλο μένει στον μαθητή</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Ανατροφοδότηση με στόχο:</strong> η διόρθωση λέει <em>τι</em> ήταν λάθος και <em>τι</em> θα
+              έπρεπε να γραφτεί — όχι απλώς «λάθος» <a class="cite" href="#ref-hattie">[Hattie &amp; Timperley, 2007]</a>.</p>
+              <p><strong>Αυτο-αξιολόγηση:</strong> ο διορθωτής μαθαίνει εξίσου με τον διορθωμένο· η κρίση πάνω σε
+              ξένη απάντηση σταθεροποιεί το κριτήριο <a class="cite" href="#ref-black">[Black &amp; Wiliam, 1998]</a>.</p>
+            </div>
+
+            <div class="callout callout--warn">
+              <span class="callout__icon" aria-hidden="true">⚖</span>
+              <div><p><strong>Κανόνας δικαιοσύνης στη διόρθωση:</strong> «μισή μονάδα» δεν δίνεται ποτέ για
+              προσπάθεια. Δίνεται μόνο όταν η απάντηση είναι μερικώς σωστή με ρητό κριτήριο στο κλειδί
+              (σωστή πράξη, λάθος μονάδα). Το ίδιο κριτήριο θα εφαρμοστεί και στο γραπτό.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 8 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 8</span>
+            <span class="badge-block">Μπλοκ 2</span>
+            <span class="phase__title">Το Πλάνο του Γραπτού — Δομή, Βάρη, Λεπτά</span>
+            <span class="badge-k">8΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Κανείς να μην εκπλαγεί την επόμενη εβδομάδα: η μορφή, τα βάρη και οι κανόνες μοριοδότησης είναι δημόσια.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Ανάγνωση του πλάνου (§10): πέντε θέματα × 20 μονάδες, 100 μονάδες, 90′, βαθμός = μονάδες ÷ 5, βάση 50. Απαντήσεις μόνο για τη μορφή.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Δεν δίνει νούμερα ασκήσεων. Όπου η ερώτηση πάει σε περιεχόμενο: «αυτό θα το δεις την επόμενη εβδομάδα — σήμερα δες τη μορφή».</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Το πλάνο γραμμένο στον πίνακα (πέντε γραμμές) και μοιρασμένο ως μία κόλλα A5· μένει στο τετράδιο.</p></div>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Την επόμενη εβδομάδα γράφετε 90 λεπτά. Πέντε θέματα, είκοσι μονάδες το καθένα. Ο βαθμός
+              βγαίνει από τις μονάδες διά πέντε — 100 μονάδες, 20 βαθμός, βάση το 50.</blockquote>
+              <blockquote>Δύο πράγματα μετράνε όσο το αποτέλεσμα: <strong>η αιτιολόγηση</strong> στο Σωστό/Λάθος
+              και <strong>τα βήματα</strong> στον υπολογισμό. Γραπτό με σωστά νούμερα αλλά χωρίς «επειδή» και χωρίς
+              βήματα χάνει περίπου τις μισές μονάδες — αυτό δεν είναι τιμωρία, είναι το επάγγελμα: ο πελάτης δεν
+              πληρώνει για «37», πληρώνει για «37 Ω, άρα το μοτέρ είναι καλό».</blockquote>
+              <blockquote>Και κάτι τελευταίο: <strong>δεν</strong> θα πέσουν θέματα από το 6ο εργαστήριο. Ό,τι
+              γράψατε στα πέντε πρώτα είναι η ύλη — τίποτα άλλο.</blockquote>
+            </div>
+
+            <div class="udl">
+              <span>👁 UDL: το πλάνο ορατό και γραπτό</span>
+              <span>🗣 UDL: ερωτήσεις μόνο για μορφή</span>
+              <span>🎯 UDL: κανόνες μοριοδότησης πριν την εξέταση</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Διαφάνεια κριτηρίων:</strong> όταν οι μαθητές ξέρουν πώς μοριοδοτείται, κατευθύνουν τη
+              μελέτη στη <em>μορφή</em> της απάντησης, όχι μόνο στο περιεχόμενο <a class="cite" href="#ref-black">[Black &amp; Wiliam, 1998]</a>.</p>
+              <p><strong>Μείωση άγχους εξέτασης:</strong> η αβεβαιότητα για τη δομή είναι ανεξάρτητη πηγή άγχους —
+              και πέφτει μόλις η δομή ανακοινωθεί <a class="cite" href="#ref-zeidner">[Zeidner, 1998]</a>.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 9 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 9</span>
+            <span class="badge-block">Μπλοκ 2</span>
+            <span class="phase__title">Συμβόλαιο Μελέτης &amp; Κύκλος 3-2-1</span>
+            <span class="badge-k">7΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Να φύγει ο καθένας με <em>γραπτό</em> σχέδιο επτά ημερών, όχι με την πρόθεση «θα τα ξανακοιτάξω».</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Σε χαρτί: <strong>2</strong> περιοχές που θα ξαναδιαβάσω (με τη σελίδα/το φύλλο), <strong>1</strong> λάθος που δεν θα επαναλάβω, <strong>1</strong> ερώτηση που θέλω απάντηση. Μετά κύκλος: 1′ ανά μαθητή — λέει μόνο την ερώτηση ή το λάθος.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Απαντά στις ερωτήσεις που ακούγονται, συνοπτικά. Κρατά τον κύκλο: 60″ ανά μαθητή, χωρίς σχόλια ενδιάμεσα.</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Κύκλος όρθιων καρεκλών· το χαρτί του συμβολαίου διπλώνεται και μένει στο τετράδιο (δεν παραδίδεται).</p></div>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Γράψτε τρία πράγματα. Δύο περιοχές που θα ξαναδιαβάσετε — με το φύλλο, όχι «γενικά».
+              Ένα λάθος που δεν θα επαναλάβετε στο γραπτό. Και μία ερώτηση που θέλετε απάντηση τώρα.</blockquote>
+              <blockquote>Μετά θα κάνουμε κύκλο. Ένας λέει <em>μία</em> πρόταση — ο επόμενος δεν σχολιάζει.
+              Έχουμε επτά λεπτά, ένα λεπτό ο καθένας.</blockquote>
+            </div>
+
+            <div class="udl">
+              <span>✍ UDL: γραπτή δέσμευση</span>
+              <span>🗣 UDL: 60″ ανά μαθητή, χωρίς διακοπή</span>
+              <span>🎯 UDL: στόχος με ημερομηνία</span>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Αυτορρύθμιση:</strong> η γραπτή δέσμευση με συγκεκριμένο υλικό («σελίδα/φύλλο») αυξάνει
+              την πιθανότητα πραγματικής μελέτης σε σχέση με τη γενική πρόθεση <a class="cite" href="#ref-zimmerman">[Zimmerman, 2002]</a>.</p>
+              <p><strong>Κλείσιμο κύκλου:</strong> η ερώτηση που διατυπώνεται δημόσια και απαντιέται επιτόπου
+              αποτρέπει το «θα ρωτήσω αύριο» που δεν συμβαίνει ποτέ.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ΦΑΣΗ 10 -->
+        <article class="phase">
+          <div class="phase__head">
+            <span class="badge-time">Φάση 10</span>
+            <span class="badge-block">Μπλοκ 2</span>
+            <span class="phase__title">Κλείσιμο &amp; Τακτοποίηση</span>
+            <span class="badge-k">4΄</span>
+          </div>
+          <div class="phase__body">
+            <div class="phase-grid">
+              <div class="mini"><h5>Στόχος</h5><p>Τρεις προτάσεις που συνοψίζουν το δίωρο — και μια τάξη έτοιμη για το επόμενο μάθημα.</p></div>
+              <div class="mini"><h5>Δραστηριότητα</h5><p>Ο καθηγητής λέει τρεις προτάσεις (μία ανά σταθμό). Οι μαθητές διπλώνουν τους σταθμούς, μαζεύουν τα χαρτάκια, αφήνουν τις καρέκλες στη θέση τους.</p></div>
+              <div class="mini"><h5>Ρόλος εκπαιδευτικού</h5><p>Δεν προσθέτει νέο περιεχόμενο. Υπενθυμίζει μόνο: «την επόμενη εβδομάδα γραπτό, 90′, τα ίδια πέντε θέματα-περιοχές».</p></div>
+              <div class="mini"><h5>Οργάνωση</h5><p>Ολομέλεια όρθια· 4 λεπτά, όχι περισσότερα.</p></div>
+            </div>
+
+            <div class="script">
+              <h4>Ενδεικτικό script</h4>
+              <blockquote>Τρεις προτάσεις και φεύγουμε. Ένα: το NTC πέφτει με τη ζέστη, το PTC ανεβαίνει.
+              Δύο: το cut-out είναι εκεί όπου ανοίγει η επαφή — κάτω στον LP, πάνω στον HP. Τρία: S–R είναι το
+              άθροισμα των δύο άλλων. Την επόμενη εβδομάδα γράφετε 90 λεπτά — καλή συνέχεια.</blockquote>
+            </div>
+
+            <div class="why">
+              <h4>Γιατί λειτουργεί</h4>
+              <p><strong>Τέλος οριοθετημένο:</strong> ένα κλείσιμο με σταθερή δομή δίνει στον ενήλικο την αίσθηση
+              ότι ο χρόνος του αξιοποιήθηκε — και αυξάνει την πιθανότητα να έρθει στο επόμενο μάθημα.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== 7. ΧΑΡΤΗΣ ΕΠΑΝΑΛΗΨΗΣ ===== -->
+    <section id="map" aria-labelledby="map-title">
+      <div class="card">
+        <h2 class="section-title" id="map-title"><span class="num">7</span> Χάρτης Επανάληψης — Πέντε Περιοχές, Πέντε Παγίδες</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Ο χάρτης δεν είναι σύνοψη της ύλης — είναι <strong>ο κατάλογος των παγίδων</strong>. Κάθε περιοχή έχει
+          ένα σημείο όπου χάνονται οι μονάδες, και αυτό είναι το μόνο που χρειάζεται να κοιτάξει ο μαθητής πριν
+          το γραπτό. Η στήλη «τι θα ζητήσει» περιγράφει <em>μορφή</em>, όχι νούμερα.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Χάρτης των πέντε περιοχών: τι θυμόμαστε, πού κρύβεται η παγίδα, τι θα ζητηθεί</caption>
+            <thead>
+              <tr>
+                <th scope="col">Περιοχή</th>
+                <th scope="col">Το ένα πράγμα που πρέπει να θυμάται</th>
+                <th scope="col">Πού κρύβεται η παγίδα</th>
+                <th scope="col">Τι θα ζητήσει το γραπτό</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Αισθητήρια θερμοκρασίας</strong><br><span class="muted">1ο εργαστήριο</span></td>
+                <td>NTC: αντίσταση <strong>πέφτει</strong> όταν ανεβαίνει η θερμοκρασία. PTC: <strong>ανεβαίνει</strong>. Θερμοστοιχείο = τάση σε <strong>mV</strong>. Διμεταλλικό = διακόπτης (συνέχεια).</td>
+                <td>Η <em>κατεύθυνση</em> και η <em>μονάδα</em>. «Αντίσταση» χωρίς είδος αισθητήρα δεν σημαίνει τίποτα· «mV» γραμμένο ως «V» αλλάζει την τάξη μεγέθους.</td>
+                <td>Ανάγνωση τιμής από πίνακα/καμπύλη, σύγκριση NTC–PTC–PT100, επιλογή οργάνου και θέσης.</td>
+              </tr>
+              <tr>
+                <td><strong>2. Θερμοστάτες</strong><br><span class="muted">2ο εργαστήριο</span></td>
+                <td><strong>START = STOP + DIFF</strong> και αντίστροφα: το setpoint είναι το μέσο του «παραθύρου»· τα όρια είναι setpoint ± Δ/2.</td>
+                <td>Το μισό ή το ολόκληρο διαφορικό. Ο μαθητής που προσθέτει <em>ολόκληρο</em> το Δ στο setpoint βρίσκει λάθος όριο — και το λάθος αυτό επαναλαμβάνεται σε κάθε επόμενο θέμα.</td>
+                <td>Υπολογισμός START/STOP, διάκριση χειροκίνητου/αυτόματου reset, σύνδεση σε σειρά με το πηνίο.</td>
+              </tr>
+              <tr>
+                <td><strong>3. Πρεσοστάτης LP</strong><br><span class="muted">3ο εργαστήριο</span></td>
+                <td>Ο LP ανοίγει <strong>όταν πέσει</strong> η πίεση στο cut-out· ξανακλείνει στο cut-in (πιο ψηλά). differential = cut-in − cut-out. Αυτόματο reset.</td>
+                <td>Η <em>ζώνη</em>. Αν η πίεση είναι ανάμεσα στα δύο όρια, η επαφή <strong>δεν αλλάζει</strong> — κρατά την κατάστασή της. Οι μισοί μαθητές απαντούν «θα κλείσει» εκεί που δεν αλλάζει τίποτα.</td>
+                <td>Υπολογισμός differential, πρόβλεψη κατάστασης επαφής, διάκριση LP/HP λογικής.</td>
+              </tr>
+              <tr>
+                <td><strong>4. Πρεσοστάτης HP</strong><br><span class="muted">4ο εργαστήριο</span></td>
+                <td>Ο HP ανοίγει <strong>όταν ανέβει</strong> η πίεση στο cut-out· <strong>δεν ξανακλείνει μόνος του</strong> — θέλει χειροκίνητο reset, και ξεκλειδώνει μόνο αφού η πίεση πέσει κάτω από το cut-in.</td>
+                <td>«Ξεκλειδώνει μόλις πέσει κάτω από το cut-out» — λάθος. Το reset γίνεται αφού πέσει κάτω από το <em>cut-in</em>, και απαιτεί πάτημα. Η δεύτερη παγίδα: μικρό differential = «ακρίβεια» (στην πραγματικότητα: συχνές εκκινήσεις).</td>
+                <td>Υπολογισμός διαφορικού, μετατροπές bar↔psi↔kPa, αιτιολόγηση του reset, συνέπεια λάθος ρύθμισης.</td>
+              </tr>
+              <tr>
+                <td><strong>5. Περιέλιξη κινητήρα</strong><br><span class="muted">5ο εργαστήριο</span></td>
+                <td><strong>R(C-S) + R(C-R) = R(S-R)</strong>· η κύρια έχει <em>μικρότερη</em> αντίσταση (πιο χοντρό σύρμα)· μόνωση <strong>&gt; 1 MΩ</strong> = καλή, <strong>&lt; 0,5 MΩ</strong> = ύποπτη/γειωμένη· μεγάμετρο = 500 V.</td>
+                <td>Η σειρά των γραμμάτων και η <em>ερμηνεία</em> του OL. OL δεν σημαίνει «μηδέν» — σημαίνει ανοιχτό κύκλωμα. Και 0,0 Ω στη μέτρηση περιέλιξης σημαίνει βραχυκύκλωμα, όχι «τέλεια επαφή».</td>
+                <td>Επαλήθευση σχέσης, διάγνωση καλού/κομμένου/γειωμένου, ανάγνωση μόνωσης με μονάδα, κανόνας ασφαλείας με μέγκερ.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Ο πίνακας αυτοαξιολόγησης — πώς γεμίζει σε 90 δευτερόλεπτα</h3>
+        <p>
+          Στον πίνακα σχεδιάζονται πέντε στήλες, μία ανά περιοχή. Κάθε μαθητής γράφει το όνομά του <em>μόνο</em>
+          στην πρώτη στήλη και βάζει τρεις τελείες κάτω από τις περιοχές όπου «δεν θα τα κατάφερνε χωρίς σημειώσεις»:
+          <strong>μία τελεία = σίγουρος, δύο = αβέβαιος, τρεις = δεν το θυμάμαι</strong>. Δεν υπάρχει «σωστό»
+          μοτίβο· ο πίνακας δείχνει στον καθηγητή πού θα ρίξει το βάρος στη Φάση 7.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Υπόδειγμα πίνακα αυτοαξιολόγησης για επτά μαθητές</caption>
+            <thead>
+              <tr><th scope="col">Μαθητής</th><th scope="col">1 · Αισθητήρια</th><th scope="col">2 · Θερμοστάτες</th><th scope="col">3 · LP</th><th scope="col">4 · HP</th><th scope="col">5 · Κινητήρας</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Μ1</td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Μ2</td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Μ3</td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Μ4</td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Μ5</td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Μ6</td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Μ7</td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">
+          Γιατί <em>τρεις</em> τελείες και όχι «1–5»: η κλίμακα 1–5 δίνει ψεύτικη ακρίβεια και οι ενήλικοι
+          τείνουν να διαλέγουν το 3. Οι τρεις διακριτές καταστάσεις («σίγουρος / αβέβαιος / δεν θυμάμαι»)
+          παράγουν απόφαση και όχι βαθμολογία — και διαβάζονται με μια ματιά.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== 8. ΣΤΑΘΜΟΙ ===== -->
+    <section id="stations" aria-labelledby="stations-title">
+      <div class="card">
+        <h2 class="section-title" id="stations-title"><span class="num">8</span> Τρεις Σταθμοί — Ανάκληση με την Απάντηση στην Πλάτη</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Κάθε σταθμός είναι <strong>μία κάρτα A4 διπλωμένη στα δύο</strong>: μπροστά οι ερωτήσεις, πίσω οι
+          απαντήσεις με το «γιατί». Τυπώνεται από αυτή την ενότητα (ένα φύλλο ανά σταθμό), ή αντιγράφεται στον
+          πίνακα αν δεν υπάρχει εκτυπωτής. Οι ερωτήσεις είναι <em>σκόπιμα</em> λίγες: τέσσερις ανά σταθμό, ώστε
+          να προλάβει να απαντήσει και ο τελευταίος.
+        </p>
+
+        <div class="callout callout--info">
+          <span class="callout__icon" aria-hidden="true">📄</span>
+          <div>
+            <p><strong>Τι τυπώνεις:</strong> τρεις σελίδες A4, διπλής όψης ή διπλωμένες. Πάνω στην κάρτα γράφεται
+            ο αριθμός του σταθμού και το «Απαντήσεις στην πλάτη». Δεν μοιράζονται αντίγραφα σε κάθε μαθητή —
+            η κάρτα μένει στον σταθμό και ο μαθητής γράφει στο τετράδιό του.</p>
+            <p class="muted">Αν δεν υπάρχει εκτυπωτής: οι τέσσερις ερωτήσεις γράφονται στον πίνακα, οι απαντήσεις
+            σε ένα φύλλο που κρατά ο «ελεγκτής» της ομάδας και το δείχνει μόνο μετά τη 2η απάντηση.</p>
+          </div>
+        </div>
+
+        <!-- ΣΤΑΘΜΟΣ 1 -->
+        <article class="station">
+          <h5><span class="snum">1</span> Αισθητήρια θερμοκρασίας — 8′</h5>
+          <p class="muted">Ομάδα που ξεκινά εδώ: <strong>Α (3 άτομα)</strong> · Ρόλοι: χειριστής κάρτας · καταγραφέας · ελεγκτής</p>
+          <ol>
+            <li><strong>Τι μετράμε με πολύμετρο σε Ω, τι σε mV και τι με «συνέχεια»;</strong> Δώσε ένα παράδειγμα για το καθένα από το εργαστήριο.</li>
+            <li><strong>NTC 10 kΩ στους 25 °C: τι κάνει η αντίσταση στους 40 °C — πέφτει ή ανεβαίνει, και γιατί;</strong> Δώσε και κατά προσέγγιση τιμή.</li>
+            <li><strong>Διμεταλλικό έλασμα σε θερμοκρασία δωματίου: τι δείχνει το πολύμετρο στη θέση συνέχειας;</strong> Και τι θα δείξει όταν ζεσταθεί, αν είναι NC;</li>
+            <li><strong>Θερμοστοιχείο τύπου K, θερμή επαφή 100 °C, ψυχρή 25 °C.</strong> Πόση τάση περιμένεις; (Δίνεται: ≈ 4 mV ανά 100 °C διαφοράς.)</li>
+          </ol>
+
+          <details class="answer-key">
+            <summary>Απαντήσεις — στην πλάτη της κάρτας</summary>
+            <div class="answer-key__body">
+              <p><strong>1.</strong> Σε <strong>Ω</strong>: αντίσταση — αισθητήριο (θερμίστορ), τύλιγμα κινητήρα, μόνωση (σε MΩ με μέγκερ). Σε <strong>mV</strong>: τάση θερμοστοιχείου. Με <strong>συνέχεια</strong>: αν μια επαφή είναι κλειστή ή ανοιχτή — διμεταλλικό, καλώδιο, επαφή πρεσοστάτη. <em>Λάθος απάντηση που ακούγεται συχνά:</em> «με το Ω μετράω τάση» — το Ω δεν μετρά τάση και δεν μετριέται υπό τάση.</p>
+              <p><strong>2.</strong> <strong>Πέφτει.</strong> Το NTC έχει αρνητικό συντελεστή θερμοκρασίας: όσο ανεβαίνει η θερμοκρασία, η αντίσταση μειώνεται. Στους 40 °C μια τυπική καμπύλη 10 kΩ δίνει <strong>≈ 5,3 kΩ</strong> — περίπου το μισό της τιμής των 25 °C· στους 60 °C πέφτει γύρω στα <strong>2,5 kΩ</strong>. <em>Η παγίδα:</em> «πέφτει γιατί ζεσταίνεται το σύρμα» — η αιτία είναι ο ημιαγωγός, όχι η θέρμανση του μετάλλου.</p>
+              <p><strong>3.</strong> Σε θερμοκρασία δωματίου, ένα διμεταλλικό <strong>NC</strong> δίνει <strong>συνέχεια (0 Ω και «μπιπ»)</strong> — η επαφή είναι κλειστή. Όταν ζεσταθεί πάνω από το σημείο αλλαγής, το έλασμα λυγίζει, η επαφή <strong>ανοίγει</strong> και το πολύμετρο δείχνει <strong>OL</strong> (όχι 0). <em>Η παγίδα:</em> «OL = χαλασμένο». OL σημαίνει ανοιχτή επαφή — που είναι ακριβώς η λειτουργία.</p>
+              <p><strong>4.</strong> Διαφορά 100 − 25 = <strong>75 °C</strong>. Με 4 mV ανά 100 °C: 4 × 75/100 = <strong>≈ 3 mV</strong>. Γράφεται «3 mV», όχι «3 V» — η μονάδα είναι το ήμισυ της απάντησης. <em>Σημείωση:</em> το θερμοστοιχείο μετρά <em>διαφορά</em> θερμοκρασίας μεταξύ θερμής και ψυχρής επαφής· γι' αυτό χρειάζεται αναφορά.</p>
+            </div>
+          </details>
+
+          <span class="role">Ο «ελεγκτής» ελέγχει μόνο δύο πράγματα: <strong>μονάδα</strong> και <strong>«γιατί»</strong>. Αν λείπουν, ζητά επανάληψη — δεν διορθώνει ο ίδιος.</span>
+        </article>
+
+        <!-- ΣΤΑΘΜΟΣ 2 -->
+        <article class="station">
+          <h5><span class="snum">2</span> Θερμοστάτης &amp; Πρεσοστάτες — 8′</h5>
+          <p class="muted">Ομάδα που ξεκινά εδώ: <strong>Β (2 άτομα)</strong> · Ρόλοι: χειριστής κάρτας · καταγραφέας/ελεγκτής</p>
+          <ol>
+            <li><strong>Θερμοστάτης ψύξης με setpoint 4 °C και υστέρηση 2 °C.</strong> Σε ποιες θερμοκρασίες ξεκινά και σταματά ο συμπιεστής; Γράψε τη σχέση που χρησιμοποίησες.</li>
+            <li><strong>Δίνεται STOP = 2 °C και DIFF = 3 °C.</strong> Ποιο είναι το START; Και ποιο είναι το setpoint του «παραθύρου»;</li>
+            <li><strong>LP με cut-out 2,0 bar και cut-in 3,0 bar.</strong> Πόσο είναι το differential; Η πίεση πέφτει 3,4 → 2,6 → 1,9 bar — σε ποια τιμή ανοίγει η επαφή και τι κάνει ο συμπιεστής;</li>
+            <li><strong>HP με cut-out 25,0 bar και cut-in 20,0 bar.</strong> Πόσο είναι το differential; Γιατί έχει <em>χειροκίνητο</em> reset και πότε ξεκλειδώνει;</li>
+          </ol>
+
+          <details class="answer-key">
+            <summary>Απαντήσεις — στην πλάτη της κάρτας</summary>
+            <div class="answer-key__body">
+              <p><strong>1.</strong> Το «παράθυρο» μοιράζεται γύρω από το setpoint: <strong>ξεκινά στο setpoint + Δ/2 = 4 + 1 = 5 °C</strong> και <strong>σταματά στο setpoint − Δ/2 = 4 − 1 = 3 °C</strong>. Ισοδύναμα: START = STOP + DIFF → 5 = 3 + 2. <em>Η παγίδα:</em> «4 + 2 = 6» — προσθέτει ολόκληρο το διαφορικό αντί για το μισό.</p>
+              <p><strong>2.</strong> <strong>START = STOP + DIFF = 2 + 3 = 5 °C.</strong> Το setpoint (μέσο του παραθύρου) είναι (5 + 2)/2 = <strong>3,5 °C</strong>. Δεκτή και η απάντηση «ξεκινά στους 5, σταματά στους 2» χωρίς το 3,5 — η σχέση μετράει, όχι το μέσο.</p>
+              <p><strong>3.</strong> differential = cut-in − cut-out = 3,0 − 2,0 = <strong>1,0 bar</strong>. Η επαφή ανοίγει στα <strong>2,0 bar</strong> (όχι στα 2,6 — εκεί είναι στη ζώνη και δεν αλλάζει τίποτα) και ο συμπιεστής <strong>σταματά</strong>. Ξαναξεκινά μόνος του όταν η πίεση ανέβει στα 3,0 bar. <em>Η παγίδα:</em> «ανοίγει στα 2,6 γιατί πέφτει» — η ζώνη 2,0–3,0 κρατά την κατάσταση.</p>
+              <p><strong>4.</strong> differential = cut-out − cut-in = 25,0 − 20,0 = <strong>5,0 bar</strong>. Το χειροκίνητο reset υπάρχει γιατί η υπερπίεση είναι <strong>κατάσταση κινδύνου</strong>: πρέπει ο τεχνικός να βρει το αίτιο (βρώμικος συμπυκνωτής, ανεμιστήρας, αέρας στο κύκλωμα) πριν ξαναβάλει το μηχάνημα σε λειτουργία. Ξεκλειδώνει <strong>αφού η πίεση πέσει κάτω από το cut-in (20,0 bar) και πατηθεί το κουμπί</strong> — δεν ξανακλείνει μόνος του. <em>Η παγίδα:</em> «ξεκλειδώνει στα 25» ή «μόλις πέσει λίγο».</p>
+            </div>
+          </details>
+
+          <span class="role">Ο «ελεγκτής» ρωτά πάντα: <strong>«κάτω ή πάνω;»</strong> — γιατί το 80 % των λαθών σε LP/HP είναι κατεύθυνση, όχι αριθμητική.</span>
+        </article>
+
+        <!-- ΣΤΑΘΜΟΣ 3 -->
+        <article class="station">
+          <h5><span class="snum">3</span> Περιέλιξη κινητήρα — 8′</h5>
+          <p class="muted">Ομάδα που ξεκινά εδώ: <strong>Γ (2 άτομα)</strong> · Ρόλοι: χειριστής κάρτας · καταγραφέας/ελεγκτής</p>
+          <ol>
+            <li><strong>Μετρήθηκαν R(C-R) = 9,0 Ω και R(C-S) = 28,0 Ω.</strong> Τι περιμένεις στη μέτρηση S–R; Πόση είναι η αναμενόμενη τιμή και γιατί;</li>
+            <li><strong>Ποια περιέλιξη είναι η κύρια και γιατί έχει <em>μικρότερη</em> αντίσταση;</strong></li>
+            <li><strong>Μοτέρ με R(C-S) = OL, R(C-R) = 9,2 Ω, R(S-R) = OL.</strong> Διάγνωση σε μία πρόταση — και τι θα έκανες πρώτο πριν το πετάξεις;</li>
+            <li><strong>Μέγκερ 500 V, μέτρηση περιέλιξης → γη: 0,4 MΩ.</strong> Διάγνωση, και ποιος κανόνας ασφαλείας ισχύει <em>πριν</em> αγγίξεις τους ακροδέκτες;</li>
+          </ol>
+
+          <details class="answer-key">
+            <summary>Απαντήσεις — στην πλάτη της κάρτας</summary>
+            <div class="answer-key__body">
+              <p><strong>1.</strong> <strong>R(S-R) = R(C-S) + R(C-R) = 28,0 + 9,0 = 37,0 Ω.</strong> Η μέτρηση μεταξύ των δύο άκρων «βλέπει» και τις δύο περιελίξεις σε σειρά. Αν η τιμή δεν βγαίνει, δεν «διορθώνουμε» το νούμερο — επαναλαμβάνουμε τη μέτρηση (σταθερή ένδειξη, καθαρές ακίδες) και μετά υποψιαζόμαστε βλάβη.</p>
+              <p><strong>2.</strong> <strong>Κύρια είναι η C–R</strong> (run). Έχει <strong>πιο χοντρό σύρμα</strong> για να αντέχει το μεγαλύτερο ρεύμα λειτουργίας, άρα <strong>μικρότερη αντίσταση</strong>. Η βοηθητική (C–S) είναι λεπτότερη, με μεγαλύτερη αντίσταση, και δουλεύει μόνο στην εκκίνηση.</p>
+              <p><strong>3.</strong> <strong>Κομμένη βοηθητική περιέλιξη</strong>: η C–S είναι ανοιχτή (OL), άρα και η S–R είναι ανοιχτή, ενώ η κύρια μετράται κανονικά. Πρώτο βήμα πριν την απόρριψη: <strong>επανάληψη μέτρησης με καθαρές ακίδες και έλεγχο του ακροδέκτη S</strong> — μια οξειδωμένη επαφή δίνει OL χωρίς το μοτέρ να είναι καμένο.</p>
+              <p><strong>4.</strong> <strong>0,4 MΩ είναι κάτω από το όριο του 1 MΩ και κάτω από 0,5 MΩ → μόνωση ύποπτη/γειωμένη.</strong> Πριν αγγίξεις: <strong>το μέγκερ παράγει 500 V — δεν αγγίζεις ποτέ τους ακροδέκτες όσο μετρά</strong>, και <strong>εκφορτίζεις</strong> τυχόν πυκνωτές μετά. Δεύτερος έλεγχος: καθάρισμα/στέγνωμα και επανάληψη — η υγρασία δίνει ψευδή ένδειξη.</p>
+            </div>
+          </details>
+
+          <span class="role">Ο «ελεγκτής» ζητά <strong>πάντα τη σχέση γραμμένη</strong> — όχι μόνο τον αριθμό. Χωρίς τη σχέση, ο αριθμός δεν αποδεικνύει τίποτα.</span>
+        </article>
+
+        <div class="why">
+          <h4>Γιατί κάρτες με την απάντηση στην πλάτη — και όχι φύλλο εργασίας</h4>
+          <p><strong>Αυτοέλεγχος χωρίς καθηγητή:</strong> ο μαθητής παίρνει ανατροφοδότηση τη στιγμή που θυμάται τι
+          απάντησε — η πιο αποδοτική στιγμή για διόρθωση <a class="cite" href="#ref-roediger">[Roediger &amp; Karpicke, 2006]</a>.</p>
+          <p><strong>Λιγότερη γραφή, περισσότερη σκέψη:</strong> τέσσερις ερωτήσεις αντί για δώδεκα σημαίνει ότι
+          η ομάδα προλαβαίνει να <em>συζητήσει</em> την απάντηση, όχι μόνο να τη γράψει.</p>
+          <p><strong>Κοινό κριτήριο:</strong> η ίδια κάρτα δίνει και την απάντηση και το «γιατί» — άρα ο
+          «ελεγκτής» δεν αυτοσχεδιάζει, και οι τρεις ομάδες ακούν την ίδια διατύπωση <a class="cite" href="#ref-black">[Black &amp; Wiliam, 1998]</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 9. ΜΙΝΙ ΔΙΑΓΩΝΙΣΜΑ ===== -->
+    <section id="minipaper" aria-labelledby="minipaper-title">
+      <div class="card">
+        <h2 class="section-title" id="minipaper-title"><span class="num">9</span> Μίνι Διαγώνισμα — 12′ / 10 Μονάδες</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Πέντε ερωτήσεις, <strong>μία ανά περιοχή</strong>, δύο μονάδες η καθεμία. Τα νούμερα είναι
+          <em>σκόπιμα διαφορετικά</em> από εκείνα του γραπτού: το μίνι διαγώνισμα δείχνει το κενό, δεν
+          προδίδει τις απαντήσεις. Τυπώνεται μία κόλλα A4 για κάθε μαθητή — ή γράφεται στον πίνακα, αν δεν
+          υπάρχει εκτυπωτής.
+        </p>
+
+        <div class="sheet" data-printable>
+          <div class="sheet__head">
+            <h4>Μίνι διαγώνισμα — Εργαστήρια 1ο–5ο (10 μονάδες, 12 λεπτά)</h4>
+            <span>Δεν βαθμολογείται · γράφε με μονάδες</span>
+            <div class="sheet__actions">
+              <button class="btn btn--sm btn--ghost" type="button" data-print-sheet>Εκτύπωση φύλλου</button>
+            </div>
+          </div>
+
+          <p class="muted">Ονοματεπώνυμο (μόνο για την ανταλλαγή): ______________________________ &nbsp; Ημερομηνία: ____________</p>
+
+          <div class="q">
+            <p class="q__stem">1. <strong>(Αισθητήρια — 2 μον.)</strong> Αισθητήρας NTC 10 kΩ μετριέται 10,00 kΩ στους 25 °C και 20,2 kΩ στους 10 °C. Πόσο μεταβλήθηκε η αντίσταση, σε kΩ και σε ποσοστό της αρχικής τιμής;</p>
+            <div class="lines"><div class="line"></div><div class="line"></div></div>
+          </div>
+
+          <div class="q">
+            <p class="q__stem">2. <strong>(Θερμοστάτης — 2 μον.)</strong> Θερμοστάτης ψύξης έχει setpoint 3 °C και υστέρηση 3 °C. Σε ποιες θερμοκρασίες ξεκινά και σε ποια σταματά ο συμπιεστής; Γράψε τη σχέση.</p>
+            <div class="lines"><div class="line"></div><div class="line"></div></div>
+          </div>
+
+          <div class="q">
+            <p class="q__stem">3. <strong>(LP — 2 μον.)</strong> Πρεσοστάτης LP: cut-out 2,0 bar, cut-in 3,0 bar. Η πίεση πέφτει από 3,4 σε 1,7 bar. Σε ποια τιμή ανοίγει η επαφή και τι κάνει ο συμπιεστής; Πόσο είναι το differential;</p>
+            <div class="lines"><div class="line"></div><div class="line"></div></div>
+          </div>
+
+          <div class="q">
+            <p class="q__stem">4. <strong>(HP — 2 μον.)</strong> Γιατί ο πρεσοστάτης υψηλής πίεσης έχει χειροκίνητο reset; Απάντησε σε <em>μία</em> πρόταση που να αρχίζει με «Επειδή…».</p>
+            <div class="lines"><div class="line"></div><div class="line"></div></div>
+          </div>
+
+          <div class="q">
+            <p class="q__stem">5. <strong>(Κινητήρας — 2 μον.)</strong> Μονοφασικός κινητήρας: R(C-R) = 8,0 Ω, R(C-S) = 24,0 Ω. (α) Ποια τιμή περιμένεις στη μέτρηση S–R; (β) Ένα μοτέρ δίνει μόνωση 0,4 MΩ — τι σημαίνει;</p>
+            <div class="lines"><div class="line"></div><div class="line"></div></div>
+          </div>
+        </div>
+
+        <h3>Κλειδί &amp; μοριοδότηση</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Κλειδί απαντήσεων και κριτήρια μοριοδότησης του μίνι διαγωνίσματος</caption>
+            <thead><tr><th scope="col">#</th><th scope="col">Απάντηση</th><th scope="col">Τι παίρνει τη μονάδα — και τι όχι</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>ΔR = 20,2 − 10,0 = <strong>10,2 kΩ</strong>. Ποσοστό: 10,2 / 10,0 = <strong>1,02 → 102 %</strong> (η τιμή διπλασιάστηκε περίπου).</td>
+                <td>1 μον. για τα 10,2 kΩ <em>με μονάδα</em>· 1 μον. για το 102 % (δεκτό «≈100 %» ή «διπλασιάστηκε»). <strong>0</strong> αν γράψει 10,2 χωρίς kΩ ή αν αφαιρέσει ανάποδα και βγάλει −10,2 χωρίς σχόλιο.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Ξεκινά στο setpoint + Δ/2 = 3 + 1,5 = <strong>4,5 °C</strong> · σταματά στο setpoint − Δ/2 = <strong>1,5 °C</strong>. Ισοδύναμα START = STOP + DIFF → 4,5 = 1,5 + 3.</td>
+                <td>1 μον. για το 4,5 °C, 1 μον. για το 1,5 °C — <em>και τα δύο</em> με μονάδα. Αν γράψει 6 °C και 0 °C (ολόκληρο το διαφορικό), 0/2: είναι ακριβώς το λάθος που παρακολουθούμε.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Ανοίγει στα <strong>2,0 bar</strong> (cut-out) και ο συμπιεστής <strong>σταματά</strong>. differential = 3,0 − 2,0 = <strong>1,0 bar</strong>.</td>
+                <td>1 μον. για «ανοίγει στα 2,0 bar &amp; σταματά»· 1 μον. για 1,0 bar. Απάντηση «ανοίγει στα 1,7» = 0 στην πρώτη: το 1,7 είναι <em>μετά</em> το άνοιγμα, όχι το όριο.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Επειδή η υπερπίεση είναι <strong>κατάσταση κινδύνου</strong>: το χειροκίνητο reset αναγκάζει τον τεχνικό να βρει και να διορθώσει το αίτιο (συμπυκνωτής, ανεμιστήρας, αέρας) πριν το μηχάνημα ξαναλειτουργήσει.</td>
+                <td>1 μον. για «κίνδυνος/ασφάλεια»· 1 μον. για «ο τεχνικός πρέπει να δει το αίτιο». Απάντηση «επειδή έτσι είναι κατασκευασμένος» = 0.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>(α) R(S-R) = 8,0 + 24,0 = <strong>32,0 Ω</strong>. (β) 0,4 MΩ &lt; 0,5 MΩ → μόνωση <strong>γειωμένη/ύποπτη</strong>: το μοτέρ δεν είναι ασφαλές για λειτουργία, ελέγχεται/αντικαθίσταται.</td>
+                <td>1 μον. για 32,0 Ω με μονάδα· 1 μον. για «κάτω από 0,5 MΩ → γειωμένο/ύποπτο». «Καλή μόνωση» = 0: το όριο του εργαστηρίου είναι 1 MΩ.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--warn">
+          <span class="callout__icon" aria-hidden="true">📊</span>
+          <div>
+            <p><strong>Τι κάνει ο καθηγητής με τα νούμερα της διόρθωσης:</strong> γράφει στον πίνακα, δίπλα σε κάθε
+            ερώτηση, <em>πόσοι</em> την έχασαν. Η ερώτηση με τα περισσότερα ✗ γίνεται το θέμα της Φάσης 7 — και
+            αν είναι η 2 ή η 3, η επανάληψη πάει στα «όρια» και όχι στον κινητήρα, ό,τι κι αν έλεγε ο χάρτης της
+            Φάσης 1.</p>
+            <p class="muted">Στο γραπτό της επόμενης εβδομάδας τα ίδια κριτήρια ισχύουν στο ακέραιο: μονάδα,
+            «επειδή», βήματα. Το μίνι διαγώνισμα είναι η πρώτη εφαρμογή τους — γι' αυτό διορθώνεται με το κλειδί
+            στο χέρι και όχι «με το μάτι».</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 10. ΤΙ ΘΑ ΠΕΣΕΙ ===== -->
+    <section id="blueprint" aria-labelledby="blueprint-title">
+      <div class="card">
+        <h2 class="section-title" id="blueprint-title"><span class="num">10</span> Το Διαγώνισμα της Επόμενης Εβδομάδας — Τι θα Πέσει, Πόσο, σε Πόσα Λεπτά</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Ό,τι ακολουθεί <strong>ανακοινώνεται στους μαθητές</strong> — εκτός από τα νούμερα των ασκήσεων. Η δομή,
+          τα βάρη, τα λεπτά και οι κανόνες μοριοδότησης είναι δημόσια: η εξέταση δεν είναι παιχνίδι μαντικής, είναι
+          μέτρηση με γνωστούς κανόνες.
+        </p>
+
+        <div class="stats">
+          <div class="stat"><p class="stat__value">5</p><p class="stat__label">Θέματα (Α–Ε)</p></div>
+          <div class="stat"><p class="stat__value">100</p><p class="stat__label">Μονάδες</p></div>
+          <div class="stat"><p class="stat__value">90′</p><p class="stat__label">Διάρκεια</p></div>
+          <div class="stat"><p class="stat__value">5</p><p class="stat__label">Περιοχές ύλης</p></div>
+          <div class="stat"><p class="stat__value">÷ 5</p><p class="stat__label">Μονάδες → βαθμός 20</p></div>
+          <div class="stat stat--break"><p class="stat__value">50</p><p class="stat__label">Βάση (10/20)</p></div>
+        </div>
+
+        <h3>Η μορφή — πέντε θέματα, είκοσι μονάδες το καθένα</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Μορφή των πέντε θεμάτων, μονάδες και χρόνος-στόχος</caption>
+            <thead>
+              <tr><th scope="col">Θέμα</th><th scope="col">Είδος</th><th scope="col">Πλήθος</th><th scope="col">Μονάδες/item</th><th scope="col">Σύνολο</th><th scope="col">Χρόνος-στόχος</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Α</td><td>Σωστό / Λάθος με αιτιολόγηση μίας πρότασης</td><td>10</td><td>2</td><td>20</td><td>10′</td></tr>
+              <tr><td>Β</td><td>Πολλαπλής επιλογής (4 επιλογές, μία σωστή)</td><td>10</td><td>2</td><td>20</td><td>20′</td></tr>
+              <tr><td>Γ</td><td>Αντιστοίχιση / ταξινόμηση</td><td>4</td><td>5</td><td>20</td><td>15′</td></tr>
+              <tr><td>Δ</td><td>Υπολογισμός με βήματα και μονάδα</td><td>4</td><td>5</td><td>20</td><td>15′</td></tr>
+              <tr><td>Ε</td><td>Μελέτη περίπτωσης: 1 σενάριο, 3 ερωτήματα (10 + 5 + 5)</td><td>1</td><td>20</td><td>20</td><td>15′</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">
+          Σύνολο γραφής 75′ + 5′ έλεγχος + 5′ συλλογή + 5′ οδηγίες = <strong>90′</strong>. Δεν υπάρχει διάλειμμα.
+        </p>
+
+        <h3>Τα βάρη ανά περιοχή — δημόσια, όχι «ισορροπημένα»</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Κατανομή μονάδων ανά περιοχή ύλης και θέμα</caption>
+            <thead>
+              <tr><th scope="col">Περιοχή</th><th scope="col">Α</th><th scope="col">Β</th><th scope="col">Γ</th><th scope="col">Δ</th><th scope="col">Ε</th><th scope="col">Σύνολο</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1 · Αισθητήρια (1ο)</td><td>4</td><td>4</td><td>5</td><td>5</td><td>—</td><td><strong>18</strong></td></tr>
+              <tr><td>2 · Θερμοστάτες (2ο)</td><td>4</td><td>4</td><td>5</td><td>5</td><td>5</td><td><strong>23</strong></td></tr>
+              <tr><td>3 · Πρεσοστάτης LP (3ο)</td><td>2</td><td>2</td><td>5</td><td>—</td><td>5</td><td><strong>14</strong></td></tr>
+              <tr><td>4 · Πρεσοστάτης HP (4ο)</td><td>4</td><td>4</td><td>5</td><td>5</td><td>—</td><td><strong>18</strong></td></tr>
+              <tr><td>5 · Περιέλιξη κινητήρα (5ο)</td><td>6</td><td>6</td><td>—</td><td>5</td><td>10</td><td><strong>27</strong></td></tr>
+              <tr><td><strong>Σύνολο</strong></td><td><strong>20</strong></td><td><strong>20</strong></td><td><strong>20</strong></td><td><strong>20</strong></td><td><strong>20</strong></td><td><strong>100</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>Γιατί ο κινητήρας παίρνει 27 μονάδες:</strong> είναι το πιο πρόσφατο εργαστήριο, η μόνη περιοχή
+          όπου ο μαθητής <em>υπολογίζει και διαγιγνώσκει μαζί</em> (σχέση αντιστάσεων + μόνωση + απόφαση), και η
+          δεξιότητα που θα χρειαστεί σε κάθε service μοτέρ. <strong>Γιατί το LP παίρνει 14:</strong> η λογική του
+          (cut-out κάτω, ζώνη, αυτόματο reset) επανεξετάζεται μέσα στις ερωτήσεις των θερμοστατών και του HP — δεν
+          «εξαφανίζεται», απλώς δεν πληρώνεται δύο φορές. <strong>Καμία περιοχή δεν πέφτει κάτω από 14 μονάδες.</strong>
+        </p>
+
+        <h3>Πού «κάθονται» οι μονάδες</h3>
+        <ul class="list-check">
+          <li><strong>Στο Σωστό/Λάθος:</strong> 1 μονάδα ο χαρακτηρισμός + <strong>1 μονάδα η αιτιολόγηση</strong>. Χωρίς «επειδή», το μισό χάνεται — ακόμη κι αν το Σ/Λ είναι σωστό.</li>
+          <li><strong>Στον υπολογισμό:</strong> τα βήματα και η μονάδα μετράνε όσο το αποτέλεσμα. Σωστό νούμερο χωρίς βήματα = μισή μονάδα.</li>
+          <li><strong>Στην αντιστοίχιση:</strong> 1 μονάδα ανά σωστό ζεύγος· κάθε γράμμα χρησιμοποιείται <em>μία</em> φορά (αν δύο απαντήσεις έχουν το ίδιο γράμμα, κάτι είναι λάθος).</li>
+          <li><strong>Στη μελέτη περίπτωσης:</strong> 10 μονάδες για τη διάγνωση <em>με τεκμηρίωση</em>, 5 για την επόμενη μέτρηση, 5 για την αιτιολόγηση της προστασίας. Διάγνωση χωρίς αριθμούς = 0 στις 10.</li>
+          <li><strong>Καμία αρνητική βαθμολογία</strong> στις πολλαπλής: δεν αφαιρούνται μονάδες για λάθος, άρα απαντιούνται όλες.</li>
+        </ul>
+
+        <div class="callout callout--danger">
+          <span class="callout__icon" aria-hidden="true">🚫</span>
+          <div>
+            <p><strong>Τι ΔΕΝ εξετάζεται — και λέγεται φωναχτά:</strong></p>
+            <p>· <strong>Ρελέ, εκκινητές, χρονικά, πυκνωτές, PTC διατάξεις, μετασχηματιστής</strong> (Εργαστήρια 6ο–14ο):
+            δεν έχουν διδαχθεί ακόμη — δεν υπάρχει ούτε μία ερώτηση.</p>
+            <p>· <strong>Ψυκτικός κύκλος, πιέσεις κορεσμού, φόρτιση, μανομέτρα</strong> (Εργαστήρια 16ο+): εκτός ύλης.</p>
+            <p>· <strong>Πρακτική δεξιότητα</strong> (σύσφιγξη, μέτρηση υπό τάση, χειρισμός μέγκερ): αξιολογείται με
+            παρατήρηση στα διώρα, όχι με μολύβι. Το γραπτό ελέγχει γνώση και κρίση.</p>
+            <p>· <strong>Τύποι που δεν διδάχθηκαν</strong> (ισχύς, ρεύμα εκκίνησης, θερμικά ισοζύγια): δεν ζητούνται.</p>
+          </div>
+        </div>
+
+        <div class="callout callout--ok">
+          <span class="callout__icon" aria-hidden="true">🎯</span>
+          <div>
+            <p><strong>Το «κλείδι» της εβδομάδας, σε μία πρόταση για τον πίνακα:</strong>
+            «Ό,τι γράφω, το γράφω με <em>μονάδα</em>, με <em>αριθμό</em> και με <em>επειδή</em> — αλλιώς δεν το έχω γράψει.»</p>
+            <p class="muted">Αν ο μαθητής κρατήσει μόνο αυτό και τα τρία «κρίσιμα σημεία» του χάρτη (§7), έχει
+            καλύψει το 60–70 % των μονάδων ανεξάρτητα από το πόσο θυμάται λεπτομέρειες.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 11. ΤΡΑΠΕΖΑ ΘΕΜΑΤΩΝ ===== -->
+    <section id="bank" aria-labelledby="bank-title">
+      <style>
+        @media print {
+          #bank { break-before: page; page-break-before: always; }
+          #bank table tr, #bank .sheet { break-inside: avoid; page-break-inside: avoid; }
+          #bank h5, #bank .sheet__head { break-after: avoid; page-break-after: avoid; }
+        }
+      </style>
+      <div class="card">
+        <h2 class="section-title" id="bank-title"><span class="num">11</span> Τράπεζα Θεμάτων ΙΕΠ — τι υπάρχει για την ύλη 1ου–5ου</h2>
+        <div class="section-rule"></div>
+
+        <p class="lead">
+          Η Τράπεζα έχει θέματα που αγγίζουν <strong>και τις πέντε περιοχές</strong> — με μία σοβαρή εξαίρεση:
+          <strong>καμία μέτρηση περιέλιξης ή μόνωσης</strong> δεν υπάρχει σε θέμα. Τα δύο θέματα που παρατίθενται
+          παρακάτω είναι <em>αυτούσια</em> (εκφώνηση και κλειδί ΙΕΠ) και χρησιμεύουν στην επανάληψη ως
+          εξάσκηση στη μορφή· τα υπόλοιπα είναι καταγεγραμμένα στα σχέδια των επιμέρους εργαστηρίων.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Θέματα Τράπεζας ανά περιοχή ύλης</caption>
+            <thead>
+              <tr><th scope="col">Περιοχή</th><th scope="col">Κωδικοί</th><th scope="col">Τι ζητούν (σύνοψη)</th><th scope="col">Πού χρησιμοποιείται σήμερα</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1 · Αισθητήρια (1ο)</td>
+                <td><a href="../Τραπεζα Θεματων/26892.pdf">26892</a>, <a href="../Τραπεζα Θεματων/25379.pdf">25379</a>, <a href="../Τραπεζα Θεματων/25316.pdf">25316</a>, <a href="../Τραπεζα Θεματων/25317.pdf">25317</a>, <a href="../Τραπεζα Θεματων/29827.pdf">29827</a>, <a href="../Τραπεζα Θεματων/26906.pdf">26906</a></td>
+                <td>Σωστό/Λάθος σε NTC–PTC–ΘΕΒ· αντιστοίχιση αισθητηρίων και οργάνων· ερμηνεία μέτρησης αντίστασης</td>
+                <td>Κάρτα Σταθμού 1 — και το πλήρες θέμα 26892 παρακάτω</td>
+              </tr>
+              <tr>
+                <td>2 · Θερμοστάτες (2ο)</td>
+                <td><a href="../Τραπεζα Θεματων/23678.pdf">23678</a>, <a href="../Τραπεζα Θεματων/26941.pdf">26941</a>, <a href="../Τραπεζα Θεματων/29827.pdf">29827</a>, <a href="../Τραπεζα Θεματων/25379.pdf">25379</a>, <a href="../Τραπεζα Θεματων/25317.pdf">25317</a></td>
+                <td>Επιλογή οργάνου με αιτιολόγηση· διακύμανση ρύθμισης vs διακύμανσης λειτουργίας· ρόλος θερμοστάτη ασφαλείας</td>
+                <td>Κάρτα Σταθμού 2 — και το πλήρες θέμα 23678 παρακάτω</td>
+              </tr>
+              <tr>
+                <td>3 · Πρεσοστάτης LP (3ο)</td>
+                <td><a href="../Τραπεζα Θεματων/29604.pdf">29604</a>, <a href="../Τραπεζα Θεματων/33034.pdf">33034</a>, <a href="../Τραπεζα Θεματων/23780.pdf">23780</a>, <a href="../Τραπεζα Θεματων/35407.pdf">35407</a></td>
+                <td>Τύποι πρεσοστατών και μονάδες πίεσης· ρύθμιση 2,80 bar και ανάγνωση πίνακα σε kPa· λειτουργία πιεζοστάτη</td>
+                <td>Σταθμός 2 (μονάδες πίεσης) — η άσκηση 23780 δείχνει πώς «διαβάζεται» ένας πίνακας μέτρησης</td>
+              </tr>
+              <tr>
+                <td>4 · Πρεσοστάτης HP (4ο)</td>
+                <td><a href="../Τραπεζα Θεματων/36025.pdf">36025</a>, <a href="../Τραπεζα Θεματων/33181.pdf">33181</a>, <a href="../Τραπεζα Θεματων/36567.pdf">36567</a>, <a href="../Τραπεζα Θεματων/35407.pdf">35407</a></td>
+                <td>Αντιστοίχιση εξαρτημάτων ψυκτικού κυκλώματος (ψύκτης νερού)· Σ/Λ σε HP/LP· κατεύθυνση cut-in/cut-out</td>
+                <td>Σταθμός 2 — και υπενθύμιση ότι ο HP δεν επανέρχεται μόνος</td>
+              </tr>
+              <tr>
+                <td>5 · Περιέλιξη κινητήρα (5ο)</td>
+                <td><a href="../Τραπεζα Θεματων/33180.pdf">33180</a></td>
+                <td><strong>Δεν</strong> ζητά μέτρηση περιέλιξης: Σ/Λ πάνω στο ηλεκτρικό διάγραμμα οικιακού ψυγείου (κύκλωμα, προστασίες, χρονικό)</td>
+                <td>Μόνο ως «πλαίσιο» — για να δει ο μαθητής <em>πού</em> μετρά</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sheet">
+          <div class="sheet__head">
+            <h4>Θέμα 26892 — ΘΕΜΑ 2ο, ερώτηση 2.1 (15 μονάδες)</h4>
+            <span>Σωστό/Λάθος · 5′</span>
+          </div>
+          <p class="q__stem"><strong>2.1</strong> Να χαρακτηρίσετε τις προτάσεις που ακολουθούν γράφοντας δίπλα στο γράμμα που αντιστοιχεί σε κάθε πρόταση τη λέξη <strong>Σωστό</strong>, αν η πρόταση είναι σωστή, ή τη λέξη <strong>Λάθος</strong>, αν η πρόταση είναι λανθασμένη. <em>(Μονάδες 15)</em></p>
+          <ul class="list-plain">
+            <li><strong>α.</strong> Στα θερμίστορ N.T.C. η αντίστασή τους μειώνεται με την αύξηση της θερμοκρασίας.</li>
+            <li><strong>β.</strong> Στα θερμίστορ P.T.C, η αντίσταση μειώνεται με την αύξηση της θερμοκρασίας σε μια ορισμένη περιοχή.</li>
+            <li><strong>γ.</strong> Η θερμοστατική εκτονωτική βαλβίδα (ΘΕΒ) είναι μια συσκευή με διαστελλόμενο υγρό σε βολβό που τοποθετείται στο κύκλωμα του συμπιεστή.</li>
+            <li><strong>δ.</strong> Τα θερμίστορ N.T.C. κατασκευάζονται από οξείδια του σιδήρου, όπου έχουν προστεθεί ιόντα άλλων μετάλλων.</li>
+            <li><strong>ε.</strong> Τα θερμίστορ τοποθετούνται σε σειρά με τις περιελίξεις ενός κινητήρα και τον προστατεύουν από υπερθέρμανση.</li>
+          </ul>
+
+          <h5>Κλειδί απαντήσεων (ΙΕΠ)</h5>
+          <p><strong>2.1:</strong> α <strong>Σωστό</strong> · β <strong>Λάθος</strong> · γ <strong>Λάθος</strong> · δ <strong>Σωστό</strong> · ε <strong>Σωστό</strong>.</p>
+          <p><strong>Γιατί:</strong> το PTC <em>αυξάνει</em> την αντίστασή του με τη θερμοκρασία (γι' αυτό το χρησιμοποιούμε ως προστασία και στην εκκίνηση). Η Θ.Ε.Β., ενώ λειτουργεί με διαστελλόμενο υγρό σε βολβό, τοποθετείται στο κύκλωμα του <strong>εξατμιστή</strong> (το σώμα στην είσοδο, ο βολβός στην έξοδό του) — όχι στο κύκλωμα του συμπιεστή.</p>
+          <p class="muted"><strong>Στην τάξη:</strong> η πρόταση β είναι το θέμα του Σταθμού 1 — αν η ομάδα τη χάσει, ξαναγυρίζει στην κάρτα και στη διατύπωση «NTC πέφτει, PTC ανεβαίνει». Η πρόταση γ δεν είναι ύλη του διώρου (ΘΕΒ = Εργαστήριο 18ο)· αν την ρωτήσουν, απαντάς «δεν την έχουμε κάνει — σήμερα κρατάμε το α και το β».</p>
+          <p class="muted">Πηγή: <a href="../Τραπεζα Θεματων/26892.pdf">θέμα (PDF)</a> · <a href="../Τραπεζα Θεματων/26892_SOLUTION.pdf">ενδεικτικές απαντήσεις ΙΕΠ (PDF)</a></p>
+        </div>
+
+        <div class="sheet">
+          <div class="sheet__head">
+            <h4>Θέμα 23678 — ΘΕΜΑ 4ο (25 μονάδες)</h4>
+            <span>Επιλογή οργάνου + ερμηνεία γραφήματος · 4.1 = 13, 4.2 = 12 · 7′</span>
+          </div>
+          <p class="q__stem"><strong>4.1.</strong> Ζητάτε από τον βοηθό σας να σας φέρει έναν θερμοστάτη χώρου για να τον συνδέσετε στο σύστημα αυτοματισμού, για τον έλεγχο θερμοκρασίας του χώρου γραφείων, με μεγάλη ακρίβεια μέτρησης, σε Κεντρική Κλιματιστική Μονάδα που εγκαθιστάτε σε μια τράπεζα. Ο βοηθός σας φέρνει:</p>
+          <ul class="list-plain">
+            <li><strong>(Α)</strong> έναν ηλεκτρονικό θερμοστάτη μεγάλης ισχύος για ρεύματα μέχρι 20 A και τάσεις μέχρι 240 V,</li>
+            <li><strong>(Β)</strong> ένα θερμόμετρο υδραργύρου,</li>
+            <li><strong>(Γ)</strong> ένα θερμόμετρο με διμεταλλικό έλασμα για μεγάλες θερμοκρασιακές περιοχές από −30 έως +500 °C.</li>
+          </ul>
+          <p class="muted"><strong>α.</strong> Δώστε στον βοηθό σας να καταλάβει ποιο από τα (Α), (Β) και (Γ) θα επιλέξετε. <em>(4)</em> · <strong>β.</strong> Επεξηγήστε του για κάθε ένα από τα (Α), (Β) και (Γ) γιατί θα το επιλέγατε ή γιατί δεν θα το επιλέγατε. <em>(9)</em></p>
+          <p class="q__stem"><strong>4.2.</strong> Σε γράφημα φαίνεται θερμοστάτης με διακύμανση ρύθμισης από +1 έως +5 °C και η διακύμανση λειτουργίας του ψυκτικού θαλάμου τον οποίο ελέγχει, από −4 έως +10 °C.</p>
+          <p class="muted"><strong>α.</strong> Πόση είναι η διακύμανση ρύθμισης του θερμοστάτη; <em>(5)</em> · <strong>β.</strong> Για ποιο λόγο υπάρχει αυτή η απόκλιση της τιμής που θέτουμε με τον θερμοστάτη από αυτή που πραγματικά έχει ο ψυκτικός θάλαμος; <em>(7)</em></p>
+
+          <h5>Κλειδί απαντήσεων (ΙΕΠ)</h5>
+          <p><strong>4.1 α:</strong> Θα επέλεγα τον <strong>(Α)</strong>.</p>
+          <p><strong>4.1 β:</strong> (Α) Ο θερμοστάτης χώρου, ανάλογα με την ισχύ του σήματος που ανιχνεύει, χαρακτηρίζεται χαμηλής ή υψηλής τάσης/ισχύος· στις βιομηχανικές και επαγγελματικές συσκευές χρησιμοποιούνται θερμοστάτες μεγάλης ισχύος, για ρεύματα μέχρι 20 A και τάσεις μέχρι 240 V. (Β) Το θερμόμετρο υδραργύρου προσφέρει μόνο οπτική ανάγνωση και δεν χρησιμοποιείται σε συστήματα αυτοματισμού. (Γ) Τα θερμόμετρα με διμεταλλικό έλασμα είναι κατάλληλα για −30 °C έως +500 °C, αλλά με μικρή ακρίβεια (±1 %) — δεν επαρκούν για «μεγάλη ακρίβεια μέτρησης».</p>
+          <p><strong>4.2 α:</strong> Διακύμανση ρύθμισης = 5 − 1 = <strong>4 °C</strong>.</p>
+          <p><strong>4.2 β:</strong> Επειδή η <em>διακύμανση λειτουργίας</em> (10 − (−4) = 14 °C) περιλαμβάνει την υστέρηση του θερμοστάτη, τον χρόνο απόκρισης του αισθητηρίου και τις απώλειες/θερμική αδράνεια του θαλάμου: η τιμή που «βλέπει» ο θερμοστάτης δεν είναι η μέση θερμοκρασία του χώρου, και το σύστημα δεν σταματά ακριβώς στο όριο.</p>
+          <p class="muted"><strong>Στην τάξη:</strong> το 4.2 είναι η καλύτερη άσκηση για το «setpoint vs πραγματική θερμοκρασία» — και εξηγεί γιατί ο Σταθμός 2 δουλεύει με <em>παράθυρο</em> και όχι με μία τιμή. Το 4.1 δείχνει γιατί η επιλογή οργάνου μετράει: ο διμεταλλικός δεν είναι «λάθος», είναι ακριβής σε άλλη δουλειά.</p>
+          <p class="muted">Πηγή: <a href="../Τραπεζα Θεματων/23678.pdf">θέμα (PDF)</a> · <a href="../Τραπεζα Θεματων/23678_SOLUTION.pdf">ενδεικτικές απαντήσεις ΙΕΠ (PDF)</a></p>
+        </div>
+
+        <div class="callout callout--danger">
+          <span class="callout__icon" aria-hidden="true">⚠</span>
+          <div>
+            <p><strong>Τι ΔΕΝ καλύπτει η Τράπεζα για την ύλη 1ου–5ου</strong> — γράφεται ρητά για να μη διαβαστεί
+            ως παράλειψη:</p>
+            <p>· <strong>Καμία μέτρηση περιέλιξης ή μόνωσης</strong> (Ω, MΩ, σχέση S–R = C–S + C–R, μεγάμετρο).
+            Είναι το μισό του 5ου εργαστηρίου και δεν εμφανίζεται σε κανένα θέμα — καλύπτεται μόνο από τον Σταθμό 3
+            και το Φύλλο των μετρήσεων.</p>
+            <p>· <strong>Καμία πρακτική ασφάλεια μέτρησης</strong> (απομόνωση, εκφόρτιση πυκνωτών, «ποτέ αγγίξιμο
+            όσο μετρά το μέγκερ»).</p>
+            <p>· <strong>Καμία ρύθμιση πρεσοστάτη με μανόμετρο</strong> (βίδα, trip, reset) — μόνο θεωρία.</p>
+            <p>· <strong>Καμία σύνδεση με πρότυπα</strong> (IEC 60034 για όρια μόνωσης, EN 60204 για ηλεκτρικό
+            εξοπλισμό μηχανών).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 12. ΡΟΥΜΠΡΙΚΑ ===== -->
+    <section id="rubric" aria-labelledby="rubric-title">
+      <div class="card">
+        <h2 class="section-title" id="rubric-title"><span class="num">12</span> Ρούμπρικα Παρατήρησης</h2>
+        <div class="section-rule"></div>
+        <p class="lead">
+          Παρατηρούνται <strong>πέντε κριτήρια</strong> σε τρεις στιγμές του διώρου (σταθμοί, μίνι διαγώνισμα,
+          διόρθωση). Δεν παράγει βαθμό — παράγει <em>εικόνα</em> για τον καθηγητή και για την ανατροφοδότηση του
+          επόμενου διώρου. Σημειώνονται μόνο τρεις καταστάσεις ανά μαθητή: <strong>+</strong> (το κάνει μόνος),
+          <strong>~</strong> (το κάνει με υπόδειξη), <strong>−</strong> (δεν το κάνει ακόμη).
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Ρούμπρικα παρατήρησης πέντε κριτηρίων</caption>
+            <thead>
+              <tr><th scope="col">Κριτήριο</th><th scope="col">+ (μόνος)</th><th scope="col">~ (με υπόδειξη)</th><th scope="col">− (όχι ακόμη)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Ανάκληση με μονάδα</strong></td><td>Γράφει τιμή <em>και</em> μονάδα χωρίς υπενθύμιση</td><td>Γράφει τη σωστή τιμή, ξεχνά τη μονάδα</td><td>Δεν θυμάται την τιμή ή τη μονάδα</td></tr>
+              <tr><td><strong>Υπολογισμός ορίων</strong></td><td>START/STOP ή cut-in σωστά, με τη σχέση γραμμένη</td><td>Σωστό αποτέλεσμα χωρίς σχέση ή με λάθος πρόσημο</td><td>Προσθέτει ολόκληρο το διαφορικό / μπερδεύει cut-in–cut-out</td></tr>
+              <tr><td><strong>Διάγνωση από ζεύγος</strong></td><td>Χρησιμοποιεί <em>και τις δύο</em> τιμές και αιτιολογεί</td><td>Χρησιμοποιεί μία τιμή, σωστό συμπέρασμα</td><td>Συμπέρασμα χωρίς αναφορά σε τιμή</td></tr>
+              <tr><td><strong>Διόρθωση άλλου</strong></td><td>Εντοπίζει το λάθος και το εξηγεί με τον κανόνα</td><td>Σημειώνει ✗ χωρίς εξήγηση</td><td>Διορθώνει «χαριστικά» ή αρνείται να διορθώσει</td></tr>
+              <tr><td><strong>Δέσμευση μελέτης</strong></td><td>Γράφει 2 περιοχές + 1 λάθος + 1 ερώτηση</td><td>Γράφει γενικά («θα τα ξαναδώ»)</td><td>Δεν συμπληρώνει</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--warn">
+          <span class="callout__icon" aria-hidden="true">📋</span>
+          <div>
+            <p><strong>Πώς χρησιμοποιείται χωρίς να γίνει γραφειοκρατία:</strong> μία κόλλα με επτά γραμμές (έναν
+            μαθητή ανά γραμμή) και πέντε στήλες. Συμπληρώνεται <em>μόνο</em> ό,τι παρατηρήθηκε — τα κενά δεν
+            σημαίνουν «−». Στο τέλος του διώρου, ο καθηγητής μεταφέρει στον πίνακα μόνο τα «−» που εμφανίστηκαν
+            δύο φορές: αυτά είναι τα τρία πράγματα που θα ξαναδουλευτούν στο επόμενο μάθημα.</p>
+            <p class="muted">Η ρουμπρίκα δεν ανακοινώνεται ως βαθμολογία. Αν ρωτήσουν, η απάντηση είναι: «δεν είναι
+            βαθμός — είναι το τι θα σου πω την επόμενη φορά».</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 13. ΔΙΑΦΟΡΟΠΟΙΗΣΗ ===== -->
+    <section id="diff" aria-labelledby="diff-title">
+      <div class="card">
+        <h2 class="section-title" id="diff-title"><span class="num">13</span> Διαφοροποίηση &amp; UDL</h2>
+        <div class="section-rule"></div>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Προσαρμογές για διαφορετικά προφίλ μαθητών</caption>
+            <thead><tr><th scope="col">Προφίλ</th><th scope="col">Τι αλλάζει</th><th scope="col">Τι δεν αλλάζει</th></tr></thead>
+            <tbody>
+              <tr><td>Μαθητής με χαμηλή άνεση στα ελληνικά</td><td>Οι αγγλικοί όροι (cut-in, cut-out, differential, setpoint) γράφονται δίπλα στους ελληνικούς σε όλες τις κάρτες· δέχεται απάντηση με σκίτσο + λέξη-κλειδί.</td><td>Η απαίτηση μονάδας και αιτιολόγησης.</td></tr>
+              <tr><td>Μαθητής με εμπειρία σε μοτέρ</td><td>Στον Σταθμό 3 γίνεται «ελεγκτής» πρώτος και εξηγεί τη σχέση με δικά του λόγια· στο μίνι διαγώνισμα δίνει και τη δεύτερη ερμηνεία (υγρασία vs καμένη μόνωση).</td><td>Οι ερωτήσεις και οι μονάδες.</td></tr>
+              <tr><td>Μαθητής που «πάγωσε» στο γραπτό στο παρελθόν</td><td>Γράφει πρώτα τις πέντε απαντήσεις σε πρόχειρο, με σειρά <em>όποια ξέρει</em>, και μετά τις αντιγράφει — τεχνική «πρώτα ό,τι ξέρω».</td><td>Ο χρόνος των 12′ (δεν παρατείνεται στο μίνι· στο γραπτό ισχύει η επίσημη προσαρμογή).</td></tr>
+              <tr><td>Μαθητής με δυσκολία γραφής</td><td>Οι κάρτες απαντιούνται προφορικά στον «καταγραφέα» της ομάδας· στο μίνι γράφει με λέξεις-κλειδιά αντί προτάσεων.</td><td>Το ότι πρέπει να υπάρξει <em>γραπτή</em> απάντηση στο γραπτό της επόμενης εβδομάδας.</td></tr>
+              <tr><td>Απουσία 1–2 μαθητών</td><td>Οι τρεις ομάδες γίνονται δύο (4 + 3) και ο κύκλος γίνεται 2 σταθμοί × 12′· ο καθηγητής αναθέτει τον τρίτο σταθμό ως «γραπτή εργασία για το σπίτι» με την κάρτα.</td><td>Οι κανόνες και το μίνι διαγώνισμα.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--ok">
+          <span class="callout__icon" aria-hidden="true">♿</span>
+          <div>
+            <p><strong>Η αρχή:</strong> η προσαρμογή αλλάζει τον <em>δρόμο</em>, ποτέ τον <em>στόχο</em>. Αν το
+            μίνι διαγώνισμα γίνει ευκολότερο για κάποιον, δεν είναι προσαρμογή — είναι άλλη εξέταση, και
+            ακυρώνει τη διαγνωστική του αξία.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 14. ΥΛΙΚΑ ===== -->
+    <section id="materials" aria-labelledby="materials-title">
+      <div class="card">
+        <h2 class="section-title" id="materials-title"><span class="num">14</span> Υλικά &amp; Προετοιμασία</h2>
+        <div class="section-rule"></div>
+
+        <div class="phase-grid">
+          <div class="mini">
+            <h5>✅ Χρειάζονται οπωσδήποτε</h5>
+            <ul class="list-plain">
+              <li>Τρεις κάρτες A4 σταθμών, διπλωμένες (εκτύπωση από §8 ή χειρόγραφες).</li>
+              <li>Επτά φύλλα μίνι διαγωνίσματος + τρία εφεδρικά (§9).</li>
+              <li>Ένα κλειδί μίνι διαγωνίσματος ανά ζεύγος (ή προβολή).</li>
+              <li>Επτά χαρτάκια αυτοαξιολόγησης + στυλό.</li>
+              <li>Μία κόλλα A5 με το πλάνο του γραπτού ανά μαθητή (§10).</li>
+              <li>Ρολόι ή χρονόμετρο ορατό στην τάξη (το χρονόμετρο της σελίδας αρκεί).</li>
+            </ul>
+          </div>
+          <div class="mini">
+            <h5>➖ Δεν χρειάζονται</h5>
+            <ul class="list-plain">
+              <li>Πολύμετρα, μέγκερ, μοτέρ, πρεσοστάτες.</li>
+              <li>Πάγκος, τροφοδοσία, ψυκτικό μέσο.</li>
+              <li>Προβολέας ή υπολογιστής — οι κάρτες είναι χαρτί.</li>
+              <li>Φυλλάδια προηγούμενων εργαστηρίων: <em>απαγορεύονται</em> στο μίνι διαγώνισμα.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Το Σχέδιο Β — τρεις περιπτώσεις</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Σχέδιο Β για τρεις πιθανές αναποδιές</caption>
+            <thead><tr><th scope="col">Αν συμβεί</th><th scope="col">Τι κάνεις</th></tr></thead>
+            <tbody>
+              <tr><td>Δεν υπάρχει εκτυπωτής</td><td>Οι τέσσερις ερωτήσεις κάθε σταθμού γράφονται στον πίνακα· οι απαντήσεις μένουν σε ένα φύλλο που κρατά ο «ελεγκτής». Το μίνι διαγώνισμα γράφεται στον πίνακα και οι μαθητές απαντούν σε μισό φύλλο A4.</td></tr>
+              <tr><td>Έρχονται 4 αντί 7</td><td>Δύο ομάδες (2 + 2), κύκλος δύο σταθμών × 12′ και ο τρίτος σταθμός γίνεται ατομικά με την κάρτα στο τέλος· η Φάση 7 κρατά 5′ αντί 7′.</td></tr>
+              <tr><td>Θέλεις οπωσδήποτε αφή</td><td>Στον Σταθμό 3 μπαίνει ένα καλό μοτέρ και ένα πολύμετρο: οι τιμές της κάρτας <em>επιβεβαιώνονται</em> αντί να διαβαστούν. Ο χρόνος +4′ παίρνεται από τη Φάση 4 (6′ → 2′).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--info">
+          <span class="callout__icon" aria-hidden="true">📌</span>
+          <div>
+            <p><strong>Checklist των 5 λεπτών πριν το κουδούνι:</strong> ☐ τρεις κάρτες στη θέση τους, με την πλάτη
+            προς τα κάτω · ☐ επτά φύλλα μίνι διαγωνίσματος, <em>κρυμμένα</em> · ☐ κλειδί σε φάκελο · ☐ πέντε
+            στήλες στον πίνακα (η μία με ονόματα) · ☐ χρονόμετρο μηδενισμένο · ☐ γραμμένο στον πίνακα το «πλάνο
+            του γραπτού» σε πέντε γραμμές.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 15. ΑΝΑΦΟΡΕΣ ===== -->
+    <section id="refs" aria-labelledby="refs-title">
+      <div class="card">
+        <h2 class="section-title" id="refs-title"><span class="num">15</span> Παιδαγωγικές &amp; Τεχνικές Αναφορές</h2>
+        <div class="section-rule"></div>
+
+        <h3>Παιδαγωγικές</h3>
+        <ol class="refs">
+          <li id="ref-anderson">Anderson, L. W., &amp; Krathwohl, D. R. (Eds.) (2001). <em>A Taxonomy for Learning, Teaching, and Assessing: A Revision of Bloom's Taxonomy of Educational Objectives.</em> New York: Longman.</li>
+          <li id="ref-ausubel">Ausubel, D. P. (1968). <em>Educational Psychology: A Cognitive View.</em> New York: Holt, Rinehart &amp; Winston.</li>
+          <li id="ref-bandura">Bandura, A. (1997). <em>Self-Efficacy: The Exercise of Control.</em> New York: W. H. Freeman.</li>
+          <li id="ref-biggs">Biggs, J. (1996). Enhancing teaching through constructive alignment. <em>Higher Education, 32</em>(3), 347–364.</li>
+          <li id="ref-black">Black, P., &amp; Wiliam, D. (1998). Assessment and classroom learning. <em>Assessment in Education, 5</em>(1), 7–74.</li>
+          <li id="ref-cepeda">Cepeda, N. J., Pashler, H., Vul, E., Wixted, J. T., &amp; Rohrer, D. (2006). Distributed practice in verbal recall tasks: A review and quantitative synthesis. <em>Psychological Bulletin, 132</em>(3), 354–380.</li>
+          <li id="ref-collins">Collins, A., Brown, J. S., &amp; Newman, S. E. (1989). Cognitive apprenticeship: Teaching the crafts of reading, writing, and mathematics. In L. B. Resnick (Ed.), <em>Knowing, Learning, and Instruction</em> (pp. 453–494). Hillsdale, NJ: Erlbaum.</li>
+          <li id="ref-deci">Deci, E. L., &amp; Ryan, R. M. (2000). The «what» and «why» of goal pursuits: Human needs and the self-determination of behavior. <em>Psychological Inquiry, 11</em>(4), 227–268.</li>
+          <li id="ref-dweck">Dweck, C. S. (2006). <em>Mindset: The New Psychology of Success.</em> New York: Random House.</li>
+          <li id="ref-edmondson">Edmondson, A. (1999). Psychological safety and learning behavior in work teams. <em>Administrative Science Quarterly, 44</em>(2), 350–383.</li>
+          <li id="ref-ericsson">Ericsson, K. A., Krampe, R. T., &amp; Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. <em>Psychological Review, 100</em>(3), 363–406.</li>
+          <li id="ref-flavell">Flavell, J. H. (1979). Metacognition and cognitive monitoring. <em>American Psychologist, 34</em>(10), 906–911.</li>
+          <li id="ref-hattie">Hattie, J., &amp; Timperley, H. (2007). The power of feedback. <em>Review of Educational Research, 77</em>(1), 81–112.</li>
+          <li id="ref-keith">Keith, N., &amp; Frese, M. (2005). Self-regulation in error management training: Emotion control and metacognition as mediators of performance effects. <em>Journal of Applied Psychology, 90</em>(4), 677–691.</li>
+          <li id="ref-knowles">Knowles, M. S. (1980). <em>The Modern Practice of Adult Education: From Pedagogy to Andragogy.</em> New York: Cambridge Books.</li>
+          <li id="ref-kolb">Kolb, D. A. (1984). <em>Experiential Learning: Experience as the Source of Learning and Development.</em> Englewood Cliffs, NJ: Prentice-Hall.</li>
+          <li id="ref-lave">Lave, J., &amp; Wenger, E. (1991). <em>Situated Learning: Legitimate Peripheral Participation.</em> Cambridge: Cambridge University Press.</li>
+          <li id="ref-locke">Locke, E. A., &amp; Latham, G. P. (2002). Building a practically useful theory of goal setting and task motivation. <em>American Psychologist, 57</em>(9), 705–717.</li>
+          <li id="ref-mayer">Mayer, R. E. (2009). <em>Multimedia Learning</em> (2nd ed.). New York: Cambridge University Press.</li>
+          <li id="ref-roediger">Roediger, H. L., &amp; Karpicke, J. D. (2006). Test-enhanced learning: Taking memory tests improves long-term retention. <em>Psychological Science, 17</em>(3), 249–255.</li>
+          <li id="ref-rohrer">Rohrer, D., &amp; Taylor, K. (2007). The shuffling of mathematics problems improves learning. <em>Instructional Science, 35</em>(6), 481–498.</li>
+          <li id="ref-sweller">Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. <em>Cognitive Science, 12</em>(2), 257–285.</li>
+          <li id="ref-tomlinson">Tomlinson, C. A. (2001). <em>How to Differentiate Instruction in Mixed-Ability Classrooms</em> (2nd ed.). Alexandria, VA: ASCD.</li>
+          <li id="ref-vygotsky">Vygotsky, L. S. (1978). <em>Mind in Society: The Development of Higher Psychological Processes.</em> Cambridge, MA: Harvard University Press.</li>
+          <li id="ref-wiggins">Wiggins, G. (1993). <em>Assessing Student Performance.</em> San Francisco: Jossey-Bass.</li>
+          <li id="ref-zeidner">Zeidner, M. (1998). <em>Test Anxiety: The State of the Art.</em> New York: Plenum Press.</li>
+          <li id="ref-zimmerman">Zimmerman, B. J. (2002). Becoming a self-regulated learner: An overview. <em>Theory into Practice, 41</em>(2), 64–70.</li>
+        </ol>
+
+        <h3>Θεσμικά &amp; τεχνικά</h3>
+        <ol class="refs refs--tech">
+          <li>Υ.ΠΑΙΘ.Α. / Ι.Ε.Π. — Αναλυτικό Πρόγραμμα Σπουδών και Οδηγίες Διδασκαλίας ΕΠΑΛ, Τομέας Μηχανολογίας (ΦΕΚ 1276/τ.Β΄/02.07.2008).</li>
+          <li>Διακουμάκος Κ., κ.ά. <em>Ηλεκτρολογία – Αυτοματισμοί (Εργαστηριακός Οδηγός)</em>, κωδικός 0-24-0064. Ασκήσεις 2.1–2.4 και 3.1.</li>
+          <li>Ι.Ε.Π. — <em>Τράπεζα Θεμάτων Διαβαθμισμένης Δυσκολίας</em>, θέματα κωδικών 26892, 23678, 23780, 36025, 33180 (ανακτήθηκε από τον φάκελο «Τραπεζα Θεματων» του μαθήματος).</li>
+        </ol>
+        <p class="muted">
+          Οι αριθμητικές τιμές του οδηγού (5,3 kΩ @40 °C, 2,5 kΩ @60 °C, 4 mV/100 °C για τύπο K, 25/20 bar HP,
+          9/28 Ω μοτέρ, όρια 1 MΩ και 0,5 MΩ) είναι οι τιμές που χρησιμοποιήθηκαν στα αντίστοιχα σχέδια μαθήματος
+          των Εργαστηρίων 1ου–5ου και έχουν ελεγχθεί με τον πίνακα NTC (μοντέλο Β ≈ 3952 K) και τις σχέσεις των
+          σχεδίων.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== 16. ΑΝΑΣΤΟΧΑΣΜΟΣ ===== -->
+    <section id="reflect" aria-labelledby="reflect-title">
+      <div class="card">
+        <h2 class="section-title" id="reflect-title"><span class="num">16</span> Αναστοχασμός Εκπαιδευτικού</h2>
+        <div class="section-rule"></div>
+        <p class="lead">
+          Τρεις ερωτήσεις μετά το κουδούνι — γραπτά, σε μία κόλλα που μένει στον φάκελο του τμήματος. Χωρίς αυτές,
+          το επόμενο δίωρο ξεκινά από την ίδια αφετηρία.
+        </p>
+
+        <div class="reflect-grid">
+          <div class="reflect-card">
+            <h5>1. Τι έμαθα για την τάξη — όχι για την ύλη;</h5>
+            <div class="line"></div><div class="line"></div><div class="line"></div>
+            <p class="muted">Ποια περιοχή δήλωσαν αδύναμη στα χαρτάκια; Άλλαξε η εικόνα μετά το μίνι διαγώνισμα;</p>
+          </div>
+          <div class="reflect-card">
+            <h5>2. Πόσοι απάντησαν χωρίς μονάδα — και τι έκανα γι' αυτό;</h5>
+            <div class="line"></div><div class="line"></div><div class="line"></div>
+            <p class="muted">Αν είναι πάνω από τρεις, ο Κανόνας 1 δεν αρκεί: χρειάζεται «κυνήγι μονάδας» στο επόμενο μάθημα.</p>
+          </div>
+          <div class="reflect-card">
+            <h5>3. Τι θα κρατήσω και τι θα αλλάξω στο επόμενο επαναληπτικό;</h5>
+            <div class="line"></div><div class="line"></div><div class="line"></div>
+            <p class="muted">Ποια φάση κράτησε τον ρυθμό; Ποια έχασε λεπτά και από πού τα πήρε;</p>
+          </div>
+        </div>
+
+        <div class="callout callout--info">
+          <span class="callout__icon" aria-hidden="true">➡</span>
+          <div>
+            <p><strong>Γέφυρα στο επόμενο δίωρο:</strong> το <strong>Εργαστήριο 5ο 2 — Διαγώνισμα</strong> είναι
+            γραπτό 90′, πέντε θέματα × 20 μονάδες. Ο παρών οδηγός δεν περιέχει τα θέματα· περιέχει το πλάνο τους
+            (§10). Αν στο τέλος αυτού του διώρου η τάξη δεν ξέρει τη δομή, η Φάση 8 δεν έγινε.</p>
+            <p class="muted">Μετά το διαγώνισμα ακολουθεί το <strong>Εργαστήριο 6ο — Ρελέ με βολτόμετρο</strong>·
+            τα τρία συχνότερα λάθη του γραπτού γίνονται τα πρώτα 10 λεπτά του.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p><strong>Σχέδιο Μαθήματος — Εργαστήριο 5ο 1:</strong> «Επανάληψη στα Εργαστήρια 1ο–5ο πριν το Διαγώνισμα»</p>
+  <p>Σύστημα Ελέγχου, Ρύθμισης και Αυτοματισμού Εγκαταστάσεων Ψύξης και Κλιματισμού</p>
+  <p>Γ΄ Τάξη Εσπερινού ΕΠΑΛ · Τομέας Μηχανολογίας · ΦΕΚ 2.1–2.4 &amp; 3.1 · Εργαστηριακός Οδηγός 0-24-0064 · 7 Μαθητές</p>
+  <p>Δομή: 2 × 40′ με 10λεπτο διάλειμμα · 3 σταθμοί × 8′ · μίνι διαγώνισμα 12′ · χωρίς βαθμό</p>
+  <p>Έκδοση v1 — πρώτη έκδοση. Ανάκληση των πέντε περιοχών με κάρτες και σταθμούς, μίνι διαγώνισμα με κλειδί και κριτήρια, δημόσιο πλάνο του γραπτού (δομή, βάρη, λεπτά, «τι δεν εξετάζεται»), συμβόλαιο μελέτης, ρουμπρίκα πέντε κριτηρίων και δείκτης της Τράπεζας Θεμάτων για την ύλη 1ου–5ου.</p>
+  <p><em>Το δίωρο δεν περιέχει τα θέματα του γραπτού και δεν βαθμολογείται.</em> Τα νούμερα του μίνι διαγωνίσματος είναι σκόπιμα διαφορετικά από εκείνα του Εργαστηρίου 5ο 2.</p>
+  <p>&copy; 2026 — Δημιουργήθηκε για εκπαιδευτική χρήση.</p>
+</footer>
+
+<button class="to-top no-print" id="toTop" type="button" aria-label="Επιστροφή στην αρχή">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="m5 15 7-7 7 7"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  var root = document.documentElement;
+  var themeToggle = document.getElementById('themeToggle');
+  var themeLabel = document.getElementById('themeLabel');
+  var themeIcon = document.getElementById('themeIcon');
+  var SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  var MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+
+  function syncThemeUI() {
+    if (!themeToggle) return;
+    var isDark = root.dataset.theme === 'dark';
+    themeToggle.setAttribute('aria-pressed', String(isDark));
+    if (themeLabel) themeLabel.textContent = isDark ? 'Φωτεινό' : 'Σκούρο';
+    if (themeIcon) themeIcon.innerHTML = isDark ? SUN : MOON;
+  }
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      syncThemeUI();
+    });
+    syncThemeUI();
+  }
+
+  var printBtn = document.getElementById('printBtn');
+  if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+
+  var printPaper = document.getElementById('printPaper');
+  if (printPaper) printPaper.addEventListener('click', function () {
+    document.body.classList.add('print-exam');
+    window.print();
+    setTimeout(function () { document.body.classList.remove('print-exam'); }, 800);
+  });
+
+  document.querySelectorAll('[data-print-sheet]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var sheet = btn.closest('[data-printable]');
+      if (!sheet) return;
+      var clone = sheet.cloneNode(true);
+      clone.querySelectorAll('.sheet__actions').forEach(function (a) { a.remove(); });
+      var w = window.open('', '_blank', 'width=820,height=1000');
+      if (!w) { window.print(); return; }
+      var styles = '';
+      document.querySelectorAll('style').forEach(function (n) { styles += n.outerHTML; });
+      w.document.write('<!DOCTYPE html><html lang="el"><head><meta charset="UTF-8"><title>Εκτύπωση φύλλου</title>' + styles +
+        '</head><body style="padding:20px;background:#fff"><main class="container">' + clone.outerHTML + '</main></body></html>');
+      w.document.close();
+      w.focus();
+      setTimeout(function () { w.print(); }, 300);
+    });
+  });
+
+  var restoreState = [];
+  window.addEventListener('beforeprint', function () {
+    restoreState = [];
+    document.querySelectorAll('details').forEach(function (d) {
+      restoreState.push([d, d.open]);
+      d.open = true;
+    });
+  });
+  window.addEventListener('afterprint', function () {
+    restoreState.forEach(function (pair) { pair[0].open = pair[1]; });
+  });
+
+  var bar = document.getElementById('progressBar');
+  var toTop = document.getElementById('toTop');
+  var ticking = false;
+  function onScroll() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    if (bar) bar.style.width = pct.toFixed(2) + '%';
+    if (toTop) toTop.classList.toggle('is-visible', h.scrollTop > 500);
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+  onScroll();
+  if (toTop) toTop.addEventListener('click', function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
+
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar .toc a[href^="#"]'));
+  var sections = tocLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if ('IntersectionObserver' in window && sections.length) {
+    var visible = new Set();
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { visible.add(entry.target.id); }
+        else { visible.delete(entry.target.id); }
+      });
+      var activeId = null;
+      for (var i = 0; i < sections.length; i++) {
+        if (visible.has(sections[i].id)) { activeId = sections[i].id; break; }
+      }
+      if (!activeId) return;
+      tocLinks.forEach(function (a) {
+        var on = a.getAttribute('href') === '#' + activeId;
+        a.classList.toggle('is-active', on);
+        if (on) { a.setAttribute('aria-current', 'true'); } else { a.removeAttribute('aria-current'); }
+      });
+    }, { rootMargin: '-96px 0px -65% 0px', threshold: 0 });
+    sections.forEach(function (s) { spy.observe(s); });
+  }
+
+  var timerBox = document.getElementById('timerBox');
+  var timerVal = document.getElementById('timerValue');
+  var timerToggle = document.getElementById('timerToggle');
+  var timerBreak = document.getElementById('timerBreak');
+  var timerReset = document.getElementById('timerReset');
+  var timerSec = 0, timerInt = null, timerMode = 'lesson';
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), sec = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+  function renderTimer() {
+    if (!timerVal) return;
+    timerVal.textContent = fmt(timerSec);
+    timerBox.classList.toggle('is-break', timerMode === 'break');
+  }
+  function startTimer() {
+    if (timerInt) return;
+    timerInt = setInterval(function () { timerSec++; renderTimer(); }, 1000);
+    timerBox.classList.add('is-running');
+    timerToggle.textContent = '⏸';
+  }
+  function stopTimer() {
+    clearInterval(timerInt);
+    timerInt = null;
+    timerBox.classList.remove('is-running');
+    timerToggle.textContent = '▶';
+  }
+  if (timerBox) {
+    timerToggle.addEventListener('click', function () { timerInt ? stopTimer() : startTimer(); });
+    timerBreak.addEventListener('click', function () {
+      timerMode = timerMode === 'lesson' ? 'break' : 'lesson';
+      timerBreak.setAttribute('aria-pressed', String(timerMode === 'break'));
+      renderTimer();
+    });
+    timerReset.addEventListener('click', function () { stopTimer(); timerSec = 0; renderTimer(); });
+    renderTimer();
+  }
+})();
+</script>
+</body>
+</html>
+
